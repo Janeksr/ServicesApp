@@ -1,0 +1,15 @@
+﻿@model UserVM
+
+
+<h1 class="text-black">Change User Role</h1>
+
+
+<form asp-action="FindUser">
+    <div class="mb-3">
+        <label asp-for="Email" class="control-label mb-1"></label>
+        <input asp-for="Email" class="form-control mb-3" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
