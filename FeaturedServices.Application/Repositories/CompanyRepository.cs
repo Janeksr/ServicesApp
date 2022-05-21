@@ -73,5 +73,18 @@ namespace FeaturedServices.Application.Repositories
             return company;
         }
 
+        public async Task AddTotalServices(Worker worker)
+        {
+            var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
+            var newNumber = company.TotalServices++;
+            await UpdateAsync(company);
+        }
+
+        public async Task RemoveTotalServices(Worker worker)
+        {
+            var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
+            var newNumber = company.TotalServices--;
+            await UpdateAsync(company);
+        }
     }
 }

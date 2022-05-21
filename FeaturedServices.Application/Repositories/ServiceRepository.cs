@@ -33,6 +33,7 @@ namespace FeaturedServices.Application.Repositories
             var service = mapper.Map<Service>(serviceVM);
             context.Entry(worker).State = EntityState.Detached;
             await UpdateAsync(service);
+            await companyRepository.AddTotalServices(worker);
             return true;
         }
 
@@ -42,6 +43,7 @@ namespace FeaturedServices.Application.Repositories
             var worker = await workerRepository.GetWorker(service.WorkerId);
             if(worker == null) return false;
             await DeleteAsync(id);
+            await companyRepository.RemoveTotalServices(worker);
             return true;
         }
 

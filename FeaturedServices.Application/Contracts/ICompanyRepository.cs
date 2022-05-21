@@ -14,5 +14,7 @@ namespace FeaturedServices.Application.Contracts
         Task<CompanyVM> GetCompanyDetails();
         Task<bool> UpdateCompany(int id, CompanyVM company);
         Task<Company> CheckCompanyEdit();
+        Task AddTotalServices(Worker worker);
+        Task RemoveTotalServices(Worker worker);
     }
 }

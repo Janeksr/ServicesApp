@@ -1,22 +1,27 @@
 ﻿using FeaturedServices.Common.Models;
+using FeaturedServices.Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace FeaturedServices.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ApplicationDbContext context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
         {
+            this.context = context;
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var model = await context.Companies.Where(c => c.TotalServices > 0).ToListAsync();
+            return View(model);
         }
 
         public IActionResult Privacy()
