@@ -7,18 +7,23 @@ using System.Threading.Tasks;
 
 namespace FeaturedServices.Common.Models
 {
-    public class WorkerVM
+    public class WorkerServiceVM
     {
-        public int Id { get; set; }
-
-        [Required]
         [Display(Name = "First Name")]
-        [MaxLength(50)]
         public string Firstname { get; set; }
-        
-        [Required]
+
         [Display(Name = "First Name")]
-        [MaxLength(50)]
         public string Lastname { get; set; }
+        
+        [Display(Name = "Service Name")]
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        [DataType(DataType.Time)]
+        [Display(Name = "Duration Of Service")]
+        public DateTime Duration { get; set; }
+
+        public int WorkerId { get; set; }
     }
 }

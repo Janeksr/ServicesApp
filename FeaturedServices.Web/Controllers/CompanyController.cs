@@ -58,7 +58,7 @@ namespace FeaturedServices.Web.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "En error :(");
+                ModelState.AddModelError(string.Empty, "En error has occurred.");
             }
             return View(model);
         }
@@ -95,9 +95,9 @@ namespace FeaturedServices.Web.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "En error :(");
+                ModelState.AddModelError(string.Empty, "En error has occurred.");
             }
-            ModelState.AddModelError(string.Empty, "En error :(");
+            ModelState.AddModelError(string.Empty, "En error has occurred.");
             companyVM.CompanyTypes = new SelectList(context.CompanyTypes, "Id", "Name");
             return View("Edit", companyVM);
         }

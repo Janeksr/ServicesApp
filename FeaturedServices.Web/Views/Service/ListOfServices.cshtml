@@ -1,0 +1,12 @@
+﻿@model IEnumerable<WorkerServiceVM>
+@{
+    ViewData["Title"] = "ListOfServices";
+}
+
+<h1>ListOfServices</h1>
+
+@foreach(var item in Model){
+    <p>
+      @item.Firstname, @item.Lastname, @item.Name, @item.Description, @item.Duration.ToShortTimeString()h  
+    </p>
+}

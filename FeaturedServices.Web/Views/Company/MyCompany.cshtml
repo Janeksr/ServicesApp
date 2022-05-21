@@ -4,72 +4,124 @@
     ViewData["Title"] = "View";
 }
 
-<h1>Your Company</h1>
+<h1>@Model.companyVM.Name Company</h1>
 
-<div>
-    <h4>@Model.companyVM.Name Company</h4>
+
+<div class="row @*d-flex*@">
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.City)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.City)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.ZipCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.ZipCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.StreetNameAndNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.StreetNameAndNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.PhoneNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.OpeningHours)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.OpeningHours)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.ClosingHours)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.ClosingHours)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.companyVM.CompanyType)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.companyVM.CompanyType.Name)
-        </dd>
-    </dl>
+    <div class="col-6">
+        <dl class="row">
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.Name)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.Name)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.City)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.City)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.ZipCode)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.ZipCode)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.StreetNameAndNumber)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.StreetNameAndNumber)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.PhoneNumber)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.PhoneNumber)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.Description)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.Description)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.OpeningHours)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.OpeningHours)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.ClosingHours)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.ClosingHours)
+            </dd>
+            <dt class="col-sm-5">
+                @Html.DisplayNameFor(model => model.companyVM.CompanyType)
+            </dt>
+            <dd class="col-sm-7">
+                @Html.DisplayFor(model => model.companyVM.CompanyType.Name)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-6">
+        <h4>@Model.companyVM.Name Employee</h4>
+
+        <table class="table workersTable w-75">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.workerVM)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Firstname)
+                            @Html.DisplayFor(modelItem => item.Lastname)
+                        </td>
+                        <td class="w-50">
+                            <a class="btn btn-success btn-sm ms-2" asp-controller="Service" asp-action="AddService" asp-route-id="@item.Id">Add Service</a>
+                            <a class="btn btn-warning btn-sm ms-3" asp-controller="Worker" asp-action="EditWorker" asp-route-id="@item.Id">Edit</a>
+                            <button data-id="@*@item.Id*@" class="btn btn-danger deleteBtn ms-3 btn-sm" type="button"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.companyVM.Id" type="button" class="btn btn-primary">Edit @Model.companyVM.Name</a>
     <a asp-controller="Worker" asp-action="AddWorker" type="button" class="btn btn-success">Add Worker</a>
+    <a class="btn btn-success btn-sm ms-2" asp-controller="Service" asp-action="ListOfServices">Show Service</a>
 </div>
-@foreach(var worker in Model.workerVM){
-    <p>@worker.Firstname @worker.Lastname</p>
+
+
+<div class="row">
+    <div class="col-4">
+    </div>
+</div>
+
+@section Scripts{
+<script>
+    $(function(){
+    $('.workersTable').DataTable({
+       //"columns": [
+       //         { "width": "80%" },
+       //         { "width": "25%" }
+       //],
+       "dom": 'lrtip',
+       "paging": false,
+       "info": false
+    });
+    });
+</script>
 }

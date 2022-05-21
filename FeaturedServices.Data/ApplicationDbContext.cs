@@ -23,5 +23,7 @@ namespace FeaturedServices.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<CompanyType> CompanyTypes { get; set; }
         public DbSet<Worker> Workers { get; set; }
+        public DbSet<Service> Services { get; set; }
+        
     }
 }

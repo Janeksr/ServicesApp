@@ -50,5 +50,32 @@ namespace FeaturedServices.Application.Repositories
             var workerVM = mapper.Map<List<WorkerVM>>(workers);
             return workerVM;
         }
+
+        public async Task<Worker> GetWorker(int id)
+        {
+            var company = await companyRepository.CheckCompanyEdit();
+            var worker = await context.Workers.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (worker == null)
+            {
+                return null;
+            }
+            else if (worker.CompanyId != company.Id)
+            {
+                return null;
+            }
+            return worker;
+        }
+
+        public async Task<bool> UpdateWorker(WorkerVM workerVM)
+        {
+            var worker = await GetWorker(workerVM.Id);
+            if (worker == null) return false;
+            worker.Firstname = workerVM.Firstname;
+            worker.Lastname = workerVM.Lastname;
+            await UpdateAsync(worker);
+            return true;
+        }
+
+        
     }
 }

@@ -12,5 +12,7 @@ namespace FeaturedServices.Application.Contracts
     {
         Task AddWorkerToCompany(WorkerVM workerVM);
         Task<List<WorkerVM>> GetWorkers();
+        Task<Worker> GetWorker(int id);
+        Task<bool> UpdateWorker(WorkerVM workerVM);
     }
 }

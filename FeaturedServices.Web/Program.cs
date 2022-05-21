@@ -28,6 +28,7 @@ builder.Services.AddScoped<ICompanyTypeRepository, CompanyTypeRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
+builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
