@@ -3,10 +3,88 @@
     ViewData["Title"] = "ListOfServices";
 }
 
-<h1>ListOfServices</h1>
+<h1>List Of Services</h1>
 
-@foreach(var item in Model){
-    <p>
-      @item.Firstname, @item.Lastname, @item.Name, @item.Description, @item.Duration.ToShortTimeString()h  
-    </p>
+
+<table class="table workersTable ">
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Service
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Duration
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Firstname)
+                    @Html.DisplayFor(modelItem => item.Lastname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Duration)
+                </td>
+                <td>
+                    <a class="btn btn-warning" asp-action="EditService" asp-route-id="@item.Id">Edit</a>
+                    <button data-id="@item.Id" class="btn btn-danger deleteBtn ms-2" type="button"><i class="fas fa-trash-alt"></i></button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form id="deleteForm" asp-action="DeleteService">
+    <input type="hidden" id="serviceId" name="Id" />
+</form>
+
+@section Scripts{
+<script>
+    $(function(){
+        $('.workersTable').DataTable({
+           //"columns": [
+           //         { "width": "80%" },
+           //         { "width": "25%" }
+           //],
+           //"dom": 'lrtip',
+           //"paging": false,
+           "info": false
+        });
+        $('.deleteBtn').click(function(e){
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you want to delete this record?",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true
+            }).then((confirm) => {
+                if(confirm){
+                    //alert('You Said Yes');
+                    const btn = $(this);
+                    const id = btn.data("id");
+                    $('#serviceId').val(id);
+                    $('#deleteForm').submit();
+                }
+            });
+        });
+    });
+</script>
 }

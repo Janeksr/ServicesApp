@@ -9,6 +9,7 @@ namespace FeaturedServices.Common.Models
 {
     public class WorkerServiceVM
     {
+        public int Id { get; set; }
         [Display(Name = "First Name")]
         public string Firstname { get; set; }
 

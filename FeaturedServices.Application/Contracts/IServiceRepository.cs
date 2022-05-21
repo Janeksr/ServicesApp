@@ -12,5 +12,8 @@ namespace FeaturedServices.Application.Contracts
     {
         Task<bool> AddService(ServiceVM serviceVM);
         Task<List<WorkerServiceVM>> GetWorkersWithServices();
+        Task<bool> DeleteService(int id);
+        Task<ServiceEditVM> GetService(int id);
+        Task<bool> UpdateService(ServiceEditVM serviceEditVM);
     }
 }

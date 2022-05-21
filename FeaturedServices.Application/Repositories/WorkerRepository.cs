@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FeaturedServices.Application.Contracts;
+using FeaturedServices.Common.Functions;
 using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Http;
@@ -18,7 +19,6 @@ namespace FeaturedServices.Application.Repositories
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
         private readonly ICompanyRepository companyRepository;
-        private static Random random = new Random();
 
         public WorkerRepository(ApplicationDbContext context, IMapper mapper, ICompanyRepository companyRepository) : base(context)
         {
@@ -26,19 +26,17 @@ namespace FeaturedServices.Application.Repositories
             this.mapper = mapper;
             this.companyRepository = companyRepository;
         }
-        public static string RandomString(int length)
-        {
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            return new string(Enumerable.Repeat(chars, length)
-              .Select(s => s[random.Next(s.Length)]).ToArray());
-        }
 
         public async Task AddWorkerToCompany(WorkerVM workerVM)
         {
             var company = await companyRepository.CheckCompanyEdit();
             var worker = mapper.Map<Worker>(workerVM);
+
+            var key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + worker.Lastname;
+
+
+            worker.Key = RandomWorker.ComputeMd5Hash(key);
             worker.CompanyId = company.Id;
-            worker.Key = RandomString(5);
             context.Entry(company).State = EntityState.Detached;
             await AddAsync(worker);
         }

@@ -31,8 +31,26 @@ namespace FeaturedServices.Application.Repositories
             var worker = await workerRepository.GetWorker(serviceVM.WorkerId);
             if (worker == null) return false;
             var service = mapper.Map<Service>(serviceVM);
+            context.Entry(worker).State = EntityState.Detached;
             await UpdateAsync(service);
             return true;
+        }
+
+        public async Task<bool> DeleteService(int id)
+        {
+            var service = await GetAsync(id);
+            var worker = await workerRepository.GetWorker(service.WorkerId);
+            if(worker == null) return false;
+            await DeleteAsync(id);
+            return true;
+        }
+
+        public async Task<ServiceEditVM> GetService(int id)
+        {
+            var service = await GetAsync(id);
+            var worker = await workerRepository.GetWorker(service.WorkerId);
+            if (worker == null) return null;
+            return mapper.Map<ServiceEditVM>(service);
         }
 
         public async Task<List<WorkerServiceVM>> GetWorkersWithServices()
@@ -44,6 +62,7 @@ namespace FeaturedServices.Application.Repositories
             {
                 var workerServices = new WorkerServiceVM
                 {
+                    Id = service.Id,
                     Firstname = service.Worker.Firstname,
                     Lastname = service.Worker.Lastname,
                     Name = service.Name,
@@ -54,6 +73,15 @@ namespace FeaturedServices.Application.Repositories
                 workerServicesList.Add(workerServices);
             }
             return workerServicesList;
+        }
+
+        public async Task<bool> UpdateService(ServiceEditVM serviceEditVM)
+        {
+            var worker = await workerRepository.GetWorker(serviceEditVM.WorkerId);
+            if(worker == null) return false;
+            var service = mapper.Map<Service>(serviceEditVM);
+            await UpdateAsync(service);
+            return true;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace FeaturedServices.Web.Controllers
         }
         public IActionResult AddService(int id)
         {
-            if(id == 0) return NotFound();
+            if (id == 0) return NotFound();
             var model = new ServiceVM { WorkerId = id };
             return View(model);
         }
@@ -27,7 +27,7 @@ namespace FeaturedServices.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if(await serviceRepository.AddService(serviceVM))
+                    if (await serviceRepository.AddService(serviceVM))
                         return RedirectToAction("MyCompany", "Company");
                 }
             }
@@ -42,6 +42,39 @@ namespace FeaturedServices.Web.Controllers
         {
             var model = await serviceRepository.GetWorkersWithServices();
             return View(model);
+        }
+
+        public async Task<IActionResult> DeleteService(int id)
+        {
+            if (id == null) return NotFound();
+            await serviceRepository.DeleteService(id);
+            return RedirectToAction("ListOfServices", "Service");
+        }
+
+        public async Task<IActionResult> EditService(int id)
+        {
+            var model = await serviceRepository.GetService(id);
+            if (model == null) return NotFound();
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditService(ServiceEditVM serviceEditVM)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (await serviceRepository.UpdateService(serviceEditVM))
+                        return RedirectToAction("ListOfServices", "Service");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View(serviceEditVM);
         }
     }
 }
