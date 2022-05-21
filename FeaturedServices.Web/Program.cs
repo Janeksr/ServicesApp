@@ -6,6 +6,7 @@ using FeaturedServices.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,12 @@ builder.Services.AddDefaultIdentity<Client>(options => options.SignIn.RequireCon
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+builder.Services.AddPaging(options =>
+{
+    options.ViewName = "Bootstrap5";
+});
+
 
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICompanyTypeRepository, CompanyTypeRepository>();

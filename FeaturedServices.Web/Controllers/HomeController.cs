@@ -3,6 +3,7 @@ using FeaturedServices.Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ReflectionIT.Mvc.Paging;
 using System.Diagnostics;
 
 namespace FeaturedServices.Web.Controllers
@@ -18,9 +19,10 @@ namespace FeaturedServices.Web.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int pageIndex = 1)
         {
-            var model = await context.Companies.Where(c => c.TotalServices > 0).ToListAsync();
+            var query = context.Companies.AsNoTracking().OrderBy(s => s.Name);
+            var model = await PagingList.CreateAsync(query, 1, pageIndex);
             return View(model);
         }
 
@@ -44,7 +46,7 @@ namespace FeaturedServices.Web.Controllers
             {
                 if(statusCode == 404 || statusCode == 500)
                 {
-                    var viewName = statusCode.ToString();
+                    var viewName = statusCode.ToString(); 
                     return View(viewName);
                 }
             }
