@@ -1,7 +1,39 @@
 ﻿@using FeaturedServices.Data
-@model IQueryable<Company>
+@using ReflectionIT.Mvc.Paging
+@model PagingList<Company>
+@addTagHelper *, ReflectionIT.Mvc.Paging
+
 @{
     ViewData["Title"] = "Home";
 }
+
+<nav aria-label="Suppliers navigation example">
+    @await this.Component.InvokeAsync("Pager", new { pagingList = this.Model })
+</nav>
+
+<table class="table">
+    <tr>
+        <th scope="col">@Html.DisplayNameFor(x => x.Name)</th>
+        <th scope="col">@Html.DisplayNameFor(x => x.City)</th>
+        <th scope="col">@Html.DisplayNameFor(x => x.StreetNameAndNumber)</th>
+        <th scope="col">@Html.DisplayNameFor(x => x.PhoneNumber)</th>
+        <th scope="col">@Html.DisplayNameFor(x => x.Description)</th>
+
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.City</td>
+            <td>@item.StreetNameAndNumber</td>
+            <td>@item.PhoneNumber</td>
+            <td>@item.Description</td>
+        </tr>
+    }
+</table>
+
+<nav aria-label="Suppliers navigation example">
+    <vc:pager paging-list="@Model"></vc:pager>
+</nav>
 
 
