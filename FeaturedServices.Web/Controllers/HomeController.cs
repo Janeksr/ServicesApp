@@ -21,7 +21,7 @@ namespace FeaturedServices.Web.Controllers
 
         public async Task<IActionResult> Index(int pageIndex = 1)
         {
-            var query = context.Companies.Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
+            var query = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
             var model = await PagingList.CreateAsync(query, 1, pageIndex);
             return View(model);
         }
