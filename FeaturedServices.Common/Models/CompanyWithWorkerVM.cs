@@ -10,5 +10,6 @@ namespace FeaturedServices.Common.Models
     {
         public CompanyVM companyVM { get; set; }
         public List<WorkerVM> workerVM { get; set; }
+        public ImageCompanyVM imageCompanyVM { get; set; }
     }
 }

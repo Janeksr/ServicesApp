@@ -35,4 +35,8 @@
 		<ProjectReference Include="..\FeaturedServices.Application\FeaturedServices.Application.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Views\Company\ImageCompany\" />
+	</ItemGroup>
+
 </Project>

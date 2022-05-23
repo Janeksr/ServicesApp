@@ -14,6 +14,7 @@ namespace FeaturedServices.Application.Configurations
             CreateMap<Worker, WorkerVM>().ReverseMap();
             CreateMap<Service, ServiceVM>().ReverseMap();
             CreateMap<Service, ServiceEditVM>().ReverseMap();
+            CreateMap<ImageCompany, ImageCompanyVM>().ReverseMap();
         }
     }
 }
