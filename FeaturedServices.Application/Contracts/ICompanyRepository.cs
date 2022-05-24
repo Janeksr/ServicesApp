@@ -16,5 +16,7 @@ namespace FeaturedServices.Application.Contracts
         Task<Company> CheckCompanyEdit();
         Task AddTotalServices(Worker worker);
         Task RemoveTotalServices(Worker worker);
+        Task<IQueryable<CompanyExposeVM>> GetAllCompanies();
+        Task<CompanyExposeVM> GetCompany();
     }
 }

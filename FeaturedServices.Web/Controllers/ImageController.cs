@@ -9,16 +9,12 @@ namespace FeaturedServices.Web.Controllers
     public class ImageController : Controller
     {
         private readonly ApplicationDbContext context;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly IMapper mapper;
-        private readonly ICompanyRepository companyRepository;
+        private readonly IImageCompanyRepository imageCompanyRepository;
 
-        public ImageController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment, IMapper mapper, ICompanyRepository companyRepository)
+        public ImageController(ApplicationDbContext context, IImageCompanyRepository imageCompanyRepository)
         {
             this.context = context;
-            this.webHostEnvironment = webHostEnvironment;
-            this.mapper = mapper;
-            this.companyRepository = companyRepository;
+            this.imageCompanyRepository = imageCompanyRepository;
         }
 
         [HttpPost]
@@ -29,30 +25,15 @@ namespace FeaturedServices.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    string wwwRootPath = webHostEnvironment.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(imageCompanyVM.ImageFile.FileName);
-                    string extension = Path.GetExtension(imageCompanyVM.ImageFile.FileName);
-                    var imageCompany = mapper.Map<ImageCompany>(imageCompanyVM);
-                    imageCompany.ImageName=fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    string path = Path.Combine(wwwRootPath + "/Image/", fileName);
-                    using (var fileStream = new FileStream(path, FileMode.Create))
-                    {
-                        await imageCompany.ImageFile.CopyToAsync(fileStream);
-                    }
-                    //Insert record
-                    imageCompany.CompanyId = (await companyRepository.CheckCompanyEdit()).Id;
-                    context.Add(imageCompany);
-                    await context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-
+                    await imageCompanyRepository.AddImage(imageCompanyVM);
+                    return RedirectToAction("MyCompany", "Company");
                 }
             }
             catch (Exception ex)
             {
-
-                throw;
+                ModelState.AddModelError(string.Empty, "En error has occurred.");
             }
-            return View();
+            return RedirectToAction("MyCompany", "Company");
         }
     }
 }

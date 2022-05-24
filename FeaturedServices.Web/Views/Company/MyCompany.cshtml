@@ -112,6 +112,11 @@
         @await Html.PartialAsync("_ImageModal", Model.imageCompanyVM)
     </div>
 </div>
+<div class="row mt-5 ">
+    <div class="col-md-4 border">
+        <a asp-controller="Company" asp-action="PreviewCompany" type="button" class="btn btn-success">Elo</a>
+    </div>
+</div>
 
 @section Scripts{
 <script>

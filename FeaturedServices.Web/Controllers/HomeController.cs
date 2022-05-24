@@ -1,4 +1,5 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Application.Contracts;
+using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -12,17 +13,21 @@ namespace FeaturedServices.Web.Controllers
     {
         private readonly ApplicationDbContext context;
         private readonly ILogger<HomeController> _logger;
+        private readonly ICompanyRepository companyRepository;
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, ICompanyRepository companyRepository)
         {
             this.context = context;
             _logger = logger;
+            this.companyRepository = companyRepository;
         }
 
-        public async Task<IActionResult> Index(int pageIndex = 1)
+        public async Task<IActionResult> Index(int pageIndex = 1, string sort = "Name")
         {
-            var query = context.Companies.Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
-            var model = await PagingList.CreateAsync(query, 1, pageIndex);
+            //var query = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
+            var query = await companyRepository.GetAllCompanies();
+
+            var model = PagingList.Create(query, 2, pageIndex);
             return View(model);
         }
 
