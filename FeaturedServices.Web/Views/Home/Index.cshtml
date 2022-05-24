@@ -54,14 +54,13 @@
             <div class="card" style="width: 20rem;">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text">@*@item.Description*@</p>
+                    <p class="card-text">@item.Description</p>
                 </div>
                 <hr>
                 <div class="card-body">
                     <p><span class="fw-bolder">Address: </span>@item.City, @item.StreetNameAndNumber</p>
-                    @*<p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
-                <p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
-                <p><span class="fw-bolder">Category: </span>@item.CompanyType.Name</p>*@
+                    <p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
+                    <p><span class="fw-bolder">Category: </span>@item.CompanyTypeName</p>
                     <p><span class="fw-bolder">Open Hours: </span>@item.OpeningHours.ToShortTimeString() - @item.ClosingHours.ToShortTimeString()</p>
                 </div>
             </div>

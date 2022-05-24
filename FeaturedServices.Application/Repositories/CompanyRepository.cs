@@ -111,6 +111,8 @@ namespace FeaturedServices.Application.Repositories
                 {
                     Id = company.Id,
                     Name = company.Name,
+                    Description = company.Description,
+                    PhoneNumber = company.PhoneNumber,
                     City = company.City,
                     StreetNameAndNumber = company.StreetNameAndNumber,
                     OpeningHours = company.OpeningHours,
