@@ -1,6 +1,5 @@
-﻿@using FeaturedServices.Data
-@using ReflectionIT.Mvc.Paging
-@model PagingList<Company>
+﻿@using ReflectionIT.Mvc.Paging
+@model PagingList<CompanyExposeVM>
 @addTagHelper *, ReflectionIT.Mvc.Paging
 
 @{
@@ -14,19 +13,31 @@
 
 @foreach (var item in Model)
 {
-    <div class="row border">
+    <div class="row">
         <div class=col-6>
             <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="~/image/car1.jpg" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="~/image/car2.jpg" class="d-block w-100" alt="...">
-                    </div>
-                    <div class="carousel-item">
-                        <img src="~/image/car3.jpg" class="d-block w-100" alt="...">
-                    </div>
+                    @{
+                        bool first = true;
+
+                        foreach (var image in item.ImageCompanyExposeVMs)
+                        {
+                            if (first)
+                            {
+                                <div class="carousel-item active">
+                                    <img src="~/image/@image.ImageName" class="d-block w-100" alt="@image.Title">
+                                </div>
+                                first = false;
+                            }
+                            else
+                            {
+                                <div class="carousel-item">
+                                    <img src="~/image/@image.ImageName" class="d-block w-100" alt="@image.Title">
+                                </div>
+                            }
+
+                        }
+                    }
                 </div>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -43,16 +54,15 @@
             <div class="card" style="width: 20rem;">
                 <div class="card-body">
                     <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text">@item.Description</p>
+                    <p class="card-text">@*@item.Description*@</p>
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">@item.City</li>
-                    <li class="list-group-item">@item.StreetNameAndNumber, @item.ZipCode</li>
-                    <li class="list-group-item">@item.PhoneNumber</li>
-                    <li class="list-group-item">@item.CompanyType.Name</li>
-                </ul>
+                <hr>
                 <div class="card-body">
-                    <span>@item.OpeningHours.ToShortTimeString() - @item.ClosingHours.ToShortTimeString()</span>
+                    <p><span class="fw-bolder">Address: </span>@item.City, @item.StreetNameAndNumber</p>
+                    @*<p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
+                <p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
+                <p><span class="fw-bolder">Category: </span>@item.CompanyType.Name</p>*@
+                    <p><span class="fw-bolder">Open Hours: </span>@item.OpeningHours.ToShortTimeString() - @item.ClosingHours.ToShortTimeString()</p>
                 </div>
             </div>
         </div>

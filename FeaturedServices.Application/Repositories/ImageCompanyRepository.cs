@@ -3,6 +3,8 @@ using FeaturedServices.Application.Contracts;
 using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Hosting;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,15 +31,27 @@ namespace FeaturedServices.Application.Repositories
             string wwwRootPath = webHostEnvironment.WebRootPath;
             string fileName = Path.GetFileNameWithoutExtension(imageCompanyVM.ImageFile.FileName);
             string extension = Path.GetExtension(imageCompanyVM.ImageFile.FileName);
-            var imageCompany = mapper.Map<ImageCompany>(imageCompanyVM);
-            imageCompany.ImageName = fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
             string path = Path.Combine(wwwRootPath + "/Image/", fileName);
+
+            var imageCompany = mapper.Map<ImageCompany>(imageCompanyVM);
+            var date = DateTime.Now.ToString("yymmssfff");
+            imageCompany.ImageName = fileName + date + extension;
+            imageCompany.CompanyId = (await companyRepository.CheckCompanyEdit()).Id;
+
             using (var fileStream = new FileStream(path, FileMode.Create))
             {
                 await imageCompany.ImageFile.CopyToAsync(fileStream);
             }
-            //Insert record
-            imageCompany.CompanyId = (await companyRepository.CheckCompanyEdit()).Id;
+
+            var test = new FileStream(path, FileMode.Open);
+            using (Image image = Image.Load(test))
+            {
+                image.Mutate(x => x
+                     .Resize(500, 300));
+
+                image.Save(path + date + extension);
+            }
+
             await AddAsync(imageCompany);
         }
     }

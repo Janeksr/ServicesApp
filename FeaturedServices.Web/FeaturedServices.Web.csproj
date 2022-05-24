@@ -37,6 +37,7 @@
 
 	<ItemGroup>
 	  <Folder Include="Views\Company\ImageCompany\" />
+	  <Folder Include="wwwroot\Image\" />
 	</ItemGroup>
 
 </Project>

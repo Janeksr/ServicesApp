@@ -14,6 +14,7 @@ namespace FeaturedServices.Common.Models
         public string StreetNameAndNumber { get; set; }
         public DateTime OpeningHours { get; set; }
         public DateTime ClosingHours { get; set; }
-        public int CompanyTypeId { get; set; }
+        public string CompanyTypeName { get; set; }
+        public List<ImageCompanyExposeVM> ImageCompanyExposeVMs { get; set; }
     }
 }

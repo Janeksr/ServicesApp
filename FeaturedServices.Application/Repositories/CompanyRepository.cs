@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-
+using MockQueryable.Moq;
 
 namespace FeaturedServices.Application.Repositories
 {
@@ -20,6 +20,7 @@ namespace FeaturedServices.Application.Repositories
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly UserManager<Client> userManager;
         private readonly IMapper mapper;
+
 
         public CompanyRepository(ApplicationDbContext context,
             IHttpContextAccessor httpContextAccessor,
@@ -85,6 +86,43 @@ namespace FeaturedServices.Application.Repositories
             var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
             var newNumber = company.TotalServices--;
             await UpdateAsync(company);
+        }
+
+        //public async Task<IOrderedQueryable<CompanyExposeVM>> GetAllCompanies()
+        //{
+        //    var companies = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
+        //    return model;
+        //}
+
+        public async Task<IQueryable<CompanyExposeVM>> GetAllCompanies()
+        {
+            var companies = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
+            var modelList = new List<CompanyExposeVM>();
+            foreach (var company in companies)
+            {
+                var images = context.ImageCompanies.Where(x => x.CompanyId == company.Id).AsNoTracking().OrderBy(s => s.Title);
+                var imagesList = new List<ImageCompanyExposeVM>();
+                foreach (var image in images)
+                {
+                    var imageExposeVM = new ImageCompanyExposeVM { Title = image.Title, ImageName = image.ImageName };
+                    imagesList.Add(imageExposeVM);
+                }
+                var model = new CompanyExposeVM
+                {
+                    Id = company.Id,
+                    Name = company.Name,
+                    City = company.City,
+                    StreetNameAndNumber = company.StreetNameAndNumber,
+                    OpeningHours = company.OpeningHours,
+                    ClosingHours = company.ClosingHours,
+                    CompanyTypeName = company.CompanyType.Name,
+                    ImageCompanyExposeVMs = imagesList
+                };
+
+                modelList.Add(model);
+            }
+            
+            return modelList.AsQueryable();
         }
     }
 }
