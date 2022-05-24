@@ -27,7 +27,7 @@ namespace FeaturedServices.Web.Controllers
             //var query = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
             var query = await companyRepository.GetAllCompanies();
 
-            var model = PagingList.Create(query, 1, pageIndex);
+            var model = PagingList.Create(query, 2, pageIndex);
             return View(model);
         }
 

@@ -69,7 +69,6 @@ namespace FeaturedServices.Application.Repositories
             var company = context.Companies.Where(q => q.ClientId == user.Id).FirstOrDefault();
 
             if (company == null) return null;
-            //if (company.Id != id) return null;
 
             return company;
         }
@@ -88,43 +87,71 @@ namespace FeaturedServices.Application.Repositories
             await UpdateAsync(company);
         }
 
-        //public async Task<IOrderedQueryable<CompanyExposeVM>> GetAllCompanies()
-        //{
-        //    var companies = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
-        //    return model;
-        //}
-
         public async Task<IQueryable<CompanyExposeVM>> GetAllCompanies()
         {
-            var companies = context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).AsNoTracking().OrderBy(s => s.Name);
+            var companies = await context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).ToListAsync();
             var modelList = new List<CompanyExposeVM>();
             foreach (var company in companies)
             {
-                var images = context.ImageCompanies.Where(x => x.CompanyId == company.Id).AsNoTracking().OrderBy(s => s.Title);
-                var imagesList = new List<ImageCompanyExposeVM>();
-                foreach (var image in images)
+                var images = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).ToListAsync();
+                if(images.Count > 0)
                 {
-                    var imageExposeVM = new ImageCompanyExposeVM { Title = image.Title, ImageName = image.ImageName };
-                    imagesList.Add(imageExposeVM);
-                }
-                var model = new CompanyExposeVM
-                {
-                    Id = company.Id,
-                    Name = company.Name,
-                    Description = company.Description,
-                    PhoneNumber = company.PhoneNumber,
-                    City = company.City,
-                    StreetNameAndNumber = company.StreetNameAndNumber,
-                    OpeningHours = company.OpeningHours,
-                    ClosingHours = company.ClosingHours,
-                    CompanyTypeName = company.CompanyType.Name,
-                    ImageCompanyExposeVMs = imagesList
-                };
+                    var imagesList = new List<ImageCompanyExposeVM>();
+                    foreach (var image in images)
+                    {
+                        var imageExposeVM = new ImageCompanyExposeVM { Title = image.Title, ImageName = image.ImageName };
+                        imagesList.Add(imageExposeVM);
+                    }
+                    var model = new CompanyExposeVM
+                    {
+                        Id = company.Id,
+                        Name = company.Name,
+                        Description = company.Description,
+                        PhoneNumber = company.PhoneNumber,
+                        City = company.City,
+                        StreetNameAndNumber = company.StreetNameAndNumber,
+                        OpeningHours = company.OpeningHours,
+                        ClosingHours = company.ClosingHours,
+                        CompanyTypeName = company.CompanyType.Name,
+                        ImageCompanyExposeVMs = imagesList
+                    };
 
-                modelList.Add(model);
+                    modelList.Add(model);
+                }
             }
             
             return modelList.AsQueryable();
+        }
+
+        public async Task<CompanyExposeVM> GetCompany()
+        {
+            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
+            var company = context.Companies.Include(x => x.CompanyType).Where(x => x.ClientId == user.Id).FirstOrDefault();
+            if (company == null) return null;
+
+            var images = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).ToListAsync();
+            var imagesList = new List<ImageCompanyExposeVM>();
+
+            foreach (var image in images)
+            {
+                var imageExposeVM = new ImageCompanyExposeVM { Title = image.Title, ImageName = image.ImageName };
+                imagesList.Add(imageExposeVM);
+            }
+
+            var model = new CompanyExposeVM
+            {
+                Id = company.Id,
+                Name = company.Name,
+                Description = company.Description,
+                PhoneNumber = company.PhoneNumber,
+                City = company.City,
+                StreetNameAndNumber = company.StreetNameAndNumber,
+                OpeningHours = company.OpeningHours,
+                ClosingHours = company.ClosingHours,
+                CompanyTypeName = company.CompanyType.Name,
+                ImageCompanyExposeVMs = imagesList
+            };
+            return model;
         }
     }
 }

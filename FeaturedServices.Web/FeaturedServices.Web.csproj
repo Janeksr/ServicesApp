@@ -8,6 +8,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Views\Company\ImageCompany\**" />
+	  <Content Remove="Views\Company\ImageCompany\**" />
+	  <EmbeddedResource Remove="Views\Company\ImageCompany\**" />
+	  <None Remove="Views\Company\ImageCompany\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />
@@ -36,7 +43,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Views\Company\ImageCompany\" />
 	  <Folder Include="wwwroot\Image\" />
 	</ItemGroup>
 

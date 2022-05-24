@@ -102,5 +102,11 @@ namespace FeaturedServices.Web.Controllers
             return View("Edit", companyVM);
         }
 
+        public async Task<IActionResult> PreviewCompany()
+        {
+            var model = await companyRepository.GetCompany();
+            return View(model);
+        }
+
     }
 }
