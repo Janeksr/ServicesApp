@@ -38,6 +38,7 @@ namespace FeaturedServices.Application.Repositories
             string extension = Path.GetExtension(imageCompanyVM.ImageFile.FileName);
             string path = Path.Combine(wwwRootPath + "/Image/", fileName);
 
+            var imageCompany = mapper.Map<ImageCompany>(imageCompanyVM);
             var date = DateTime.Now.ToString("yymmssfff");
 
             var company = await companyRepository.CheckCompanyEdit();
@@ -45,24 +46,24 @@ namespace FeaturedServices.Application.Repositories
             if (await CheckIfCompanyHaveMainImage(company))
             {
                 imageCompany.MainImage = true;
-                imageCompany.ImageName = fileName + date + extension;
+            imageCompany.ImageName = fileName + date + extension;
                 imageCompany.CompanyId = company.Id;
 
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await imageCompany.ImageFile.CopyToAsync(fileStream);
-                }
+            using (var fileStream = new FileStream(path, FileMode.Create))
+            {
+                await imageCompany.ImageFile.CopyToAsync(fileStream);
+            }
 
-                var test = new FileStream(path, FileMode.Open);
-                using (Image image = Image.Load(test))
-                {
-                    image.Mutate(x => x
-                         .Resize(500, 300));
+            var test = new FileStream(path, FileMode.Open);
+            using (Image image = Image.Load(test))
+            {
+                image.Mutate(x => x
+                     .Resize(500, 300));
 
-                    image.Save(path + date + extension);
-                }
+                image.Save(path + date + extension);
+            }
 
-                await AddAsync(imageCompany);
+            await AddAsync(imageCompany);
                 return true;
             }
             return false;
