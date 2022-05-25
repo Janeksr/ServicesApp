@@ -21,7 +21,6 @@ namespace FeaturedServices.Application.Repositories
         private readonly UserManager<Client> userManager;
         private readonly IMapper mapper;
 
-
         public CompanyRepository(ApplicationDbContext context,
             IHttpContextAccessor httpContextAccessor,
             UserManager<Client> userManager, IMapper mapper) : base(context)
