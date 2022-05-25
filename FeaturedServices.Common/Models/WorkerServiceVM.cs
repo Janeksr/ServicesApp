@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FeaturedServices.Common.Models
 {
-    public class WorkerServiceVM
+    public class WorkerServiceVM : IValidatableObject
     {
         public int Id { get; set; }
         [Display(Name = "First Name")]
@@ -20,11 +20,21 @@ namespace FeaturedServices.Common.Models
         public string Name { get; set; }
 
         public string Description { get; set; }
+        public decimal Value { get; set; }
 
         [DataType(DataType.Time)]
         [Display(Name = "Duration Of Service")]
         public DateTime Duration { get; set; }
 
         public int WorkerId { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if(Duration.ToShortTimeString() == "00:00")
+            {
+                yield return new ValidationResult("The Duration Can Not Be Equal to 0.",
+                    new[] { nameof(Duration) });
+            }
+        }
     }
 }

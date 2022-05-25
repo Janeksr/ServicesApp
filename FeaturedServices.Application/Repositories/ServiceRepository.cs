@@ -37,6 +37,16 @@ namespace FeaturedServices.Application.Repositories
             return true;
         }
 
+        public async Task<List<WorkerVM>> CountServicesPerWorker(List<WorkerVM> workerVMs)
+        {
+            foreach (var worker in workerVMs)
+            {
+                worker.NumverOfServices = await context.Services.Where(x => x.WorkerId == worker.Id).CountAsync();
+            }
+
+            return workerVMs;
+        }
+
         public async Task<bool> DeleteService(int id)
         {
             var service = await GetAsync(id);
@@ -69,6 +79,7 @@ namespace FeaturedServices.Application.Repositories
                     Lastname = service.Worker.Lastname,
                     Name = service.Name,
                     Description = service.Description,
+                    Value = service.Value,
                     Duration = service.Duration,
                     WorkerId = service.WorkerId
                 };
@@ -84,6 +95,29 @@ namespace FeaturedServices.Application.Repositories
             var service = mapper.Map<Service>(serviceEditVM);
             await UpdateAsync(service);
             return true;
+        }
+
+        public async Task<List<WorkerServiceVM>> GetWorkersWithServicesUser(int id)
+        {
+            var model = await context.Services.Include(x => x.Worker).Where(x => x.Worker.CompanyId == id).ToListAsync();
+
+            var workerServicesList = new List<WorkerServiceVM>();
+            foreach (var service in model)
+            {
+                var workerServices = new WorkerServiceVM
+                {
+                    Id = service.Id,
+                    Firstname = service.Worker.Firstname,
+                    Lastname = service.Worker.Lastname,
+                    Name = service.Name,
+                    Description = service.Description,
+                    Value = service.Value,
+                    Duration = service.Duration,
+                    WorkerId = service.WorkerId
+                };
+                workerServicesList.Add(workerServices);
+            }
+            return workerServicesList;
         }
     }
 }

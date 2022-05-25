@@ -13,6 +13,9 @@ namespace FeaturedServices.Data
         public string Description { get; set; }
         public DateTime Duration { get; set; }
 
+        [Column(TypeName = "decimal(5,2)")]
+        public decimal Value { get; set; }
+
         [ForeignKey("WorkerId")]
         public Worker Worker { get; set; }
         public int WorkerId { get; set; }

@@ -1,0 +1,41 @@
+﻿@model CompanyExposeVM?
+
+@if (Model != null)
+{
+    <div class="row mb-5">
+        <div class="col-6">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-interval="false" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="~/image/@Model.ImageCompanyExposeVM.ImageName" class="d-block w-100" alt="@Model.ImageCompanyExposeVM.Title">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="card" style="width: 20rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Name</h5>
+                    <p class="card-text">@Model.Description</p>
+                </div>
+                <hr>
+                <div class="card-body">
+                    <p><span class="fw-bolder">Address: </span>@Model.City, @Model.StreetNameAndNumber</p>
+                    <p><span class="fw-bolder">Contact: </span>@Model.PhoneNumber</p>
+                    <p><span class="fw-bolder">Category: </span>@Model.CompanyTypeName</p>
+                    <p><span class="fw-bolder">Open Hours: </span>@Model.OpeningHours.ToShortTimeString() - @Model.ClosingHours.ToShortTimeString()</p>
+                </div>
+                <a type="button" class="btn btn-success">Make an Appointment</a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    @Html.ValidationMessage("CustomError")
+
+}
+<div>
+    <a asp-controller="Company" asp-action="MyCompany">Back to List</a>
+</div>

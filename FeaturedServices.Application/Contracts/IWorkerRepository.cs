@@ -14,5 +14,6 @@ namespace FeaturedServices.Application.Contracts
         Task<List<WorkerVM>> GetWorkers();
         Task<Worker> GetWorker(int id);
         Task<bool> UpdateWorker(WorkerVM workerVM);
+        Task DeleteWorker(int id);
     }
 }

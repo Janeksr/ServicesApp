@@ -1,9 +1,12 @@
 ﻿using FeaturedServices.Application.Contracts;
+using FeaturedServices.Common.Constants;
 using FeaturedServices.Common.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeaturedServices.Web.Controllers
 {
+    [Authorize(Roles = Roles.CompanyCreated)]
     public class ServiceController : Controller
     {
         private readonly IServiceRepository serviceRepository;

@@ -4,6 +4,7 @@ using FeaturedServices.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeaturedServices.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220525093711_AddedValueColumnToServicesTable")]
+    partial class AddedValueColumnToServicesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,7 +107,7 @@ namespace FeaturedServices.Data.Migrations
                         {
                             Id = "408121ad-b63e-49ff-1d02-6c221af8ace4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7672e791-875b-433c-93fa-e124ebde59d3",
+                            ConcurrencyStamp = "dce50ef4-ba64-4eed-ae1e-80cd89b820be",
                             DateJoined = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@localhost.com",
@@ -115,9 +117,9 @@ namespace FeaturedServices.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHkqHQkFzKuXOgyfTwgBuWztpiux2IhTcMbDIdL6+9RcJWzWLcOiZaGd+Obg/e92LA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEPwripwULQcQ4jS/khQl239JQ6lQqZqBOeJP5T7QXoDATmXJTm023JAR45u14BK0g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e132311c-aec1-4805-b3f9-5035be1bf51d",
+                            SecurityStamp = "78fde2d6-f549-4bec-b401-50590347aee4",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -125,7 +127,7 @@ namespace FeaturedServices.Data.Migrations
                         {
                             Id = "fa23f1aa-b63e-49ff-1d02-2c661cf8ace4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ff4b73b0-3c8d-4eb6-a2cc-718a1204fd76",
+                            ConcurrencyStamp = "f69c83e9-fa6b-4b8c-ad89-6015c248ca84",
                             DateJoined = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user@localhost.com",
@@ -135,9 +137,9 @@ namespace FeaturedServices.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEElzoBo0TkXUAWG45IYCDjdOrNJjckD3eED4WgoygM9Ar/0Pw4285UsgUyaheHVkwg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDRRRDWqHACkmmJz4GvHqHf16a8FK21cyaF5S1PW3WJTnGsQQwyUJCXq4Oyipn5U4A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c1b262d4-79e2-4086-b6f7-cca944afbb6e",
+                            SecurityStamp = "79cd8fef-beff-4956-8f73-d62878d39572",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });
@@ -242,9 +244,6 @@ namespace FeaturedServices.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("MainImage")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -282,7 +281,7 @@ namespace FeaturedServices.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Value")
-                        .HasColumnType("decimal(5,2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("WorkerId")
                         .HasColumnType("int");
@@ -360,28 +359,28 @@ namespace FeaturedServices.Data.Migrations
                         new
                         {
                             Id = "0f6121ad-b6be-49ff-9d02-6c442008ace4",
-                            ConcurrencyStamp = "2ac3d8e6-fa33-45ba-b4e5-30dcad409914",
+                            ConcurrencyStamp = "5f1ee0af-6ac1-40c5-a28b-a8e8822c95d8",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "0f61aaac-b21e-a9ff-9e02-64432001abe4",
-                            ConcurrencyStamp = "bdd03bf7-3776-4ec3-9e4b-c89b0129d8be",
+                            ConcurrencyStamp = "d8605f84-c431-4cce-8600-3deb7cbaf273",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "626a4a0c-b21e-a9ab-9e32-144f20a1bced",
-                            ConcurrencyStamp = "c7e3a972-14ef-43ba-b60c-b86697af5958",
+                            ConcurrencyStamp = "0b668d76-ef73-422e-865f-964d40b0cf18",
                             Name = "Company",
                             NormalizedName = "COMPANY"
                         },
                         new
                         {
                             Id = "6261baec-128e-a0ab-ae32-164f20a1bced",
-                            ConcurrencyStamp = "c3e4be34-7820-47f6-a1b2-8642be372da5",
+                            ConcurrencyStamp = "99bbfb2a-30d8-42b9-b2aa-f6eeaecfa8c4",
                             Name = "CompanyCreated",
                             NormalizedName = "COMPANYCREATED"
                         });

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using FeaturedServices.Application.Contracts;
+using FeaturedServices.Common.Constants;
 using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FeaturedServices.Web.Controllers
 {
+    [Authorize(Roles = Roles.CompanyCreated)]
     public class WorkerController : Controller
     {
         private readonly IWorkerRepository workerRepository;
@@ -68,6 +71,12 @@ namespace FeaturedServices.Web.Controllers
             }
             ModelState.AddModelError(string.Empty, "En error has occurred.");
             return View(workerVM);
+        }
+
+        public async Task<IActionResult> DeleteWorker(int id)
+        {
+            await workerRepository.DeleteWorker(id);
+            return RedirectToAction("MyCompany", "Company");
         }
     }
 }

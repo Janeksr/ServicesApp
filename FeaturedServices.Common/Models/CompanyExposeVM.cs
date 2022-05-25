@@ -12,8 +12,12 @@ namespace FeaturedServices.Common.Models
         public string Name { get; set; }
         public string City { get; set; }
         public string StreetNameAndNumber { get; set; }
+        public string Description { get; set; }
+        public string PhoneNumber { get; set; }
         public DateTime OpeningHours { get; set; }
         public DateTime ClosingHours { get; set; }
-        public int CompanyTypeId { get; set; }
+        public string CompanyTypeName { get; set; }
+        public ImageCompanyExposeVM ImageCompanyExposeVM { get; set; }
+        public List<WorkerServiceVM> WorkerServiceVMs { get; set; }
     }
 }

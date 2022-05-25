@@ -1,0 +1,34 @@
+﻿@using ReflectionIT.Mvc.Paging
+@model PagingList<CompanyExposeVM>
+
+@foreach (var item in Model)
+{
+    <div class="row mb-5">
+        <div class="col-6">
+            <div id="carouselExampleControls" class="carousel slide" data-bs-interval="false" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="~/image/@item.ImageCompanyExposeVM.ImageName" class="d-block w-100" alt="@item.ImageCompanyExposeVM.Title">
+                        </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-6">
+            <div class="card" style="width: 20rem;">
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                    <p class="card-text">@item.Description</p>
+                </div>
+                <hr>
+                <div class="card-body">
+                    <p><span class="fw-bolder">Address: </span>@item.City, @item.StreetNameAndNumber</p>
+                    <p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
+                    <p><span class="fw-bolder">Category: </span>@item.CompanyTypeName</p>
+                    <p><span class="fw-bolder">Open Hours: </span>@item.OpeningHours.ToShortTimeString() - @item.ClosingHours.ToShortTimeString()</p>
+                </div>
+                <a asp-controller="Company" asp-action="ViewCompany" id="@item.Id" type="button" class="btn btn-success">Make an Appointment</a>
+            </div>
+        </div>
+    </div>
+}

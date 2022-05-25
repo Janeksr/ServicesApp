@@ -22,6 +22,9 @@
                 Duration
             </th>
             <th>
+                Value
+            </th>
+            <th>
                 Action
             </th>
         </tr>
@@ -41,7 +44,10 @@
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Duration)
+                    @Html.DisplayFor(modelItem => item.Duration) h
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value) zł
                 </td>
                 <td>
                     <a class="btn btn-warning" asp-action="EditService" asp-route-id="@item.Id">Edit</a>
@@ -55,6 +61,10 @@
 <form id="deleteForm" asp-action="DeleteService">
     <input type="hidden" id="serviceId" name="Id" />
 </form>
+
+<div>
+    <a asp-controller="Company" asp-action="MyCompany">Back to List</a>
+</div>
 
 @section Scripts{
 <script>

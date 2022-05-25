@@ -45,6 +45,7 @@ namespace FeaturedServices.Application.Repositories
         {
             var company = await companyRepository.CheckCompanyEdit();
             var workers = await context.Workers.Where(x => x.CompanyId == company.Id).ToListAsync();
+            
             var workerVM = mapper.Map<List<WorkerVM>>(workers);
             return workerVM;
         }
@@ -74,6 +75,17 @@ namespace FeaturedServices.Application.Repositories
             return true;
         }
 
-        
+        public async Task DeleteWorker(int id)
+        {
+            var worker = await GetWorker(id);
+            if(worker == null)
+            {
+                return;
+            }
+            await DeleteAsync(id);
+            var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
+            company.TotalServices--;
+            await companyRepository.UpdateAsync(company);
+        }
     }
 }
