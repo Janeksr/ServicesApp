@@ -3,32 +3,29 @@
 
 @foreach (var item in Model)
 {
-    <div class="row mb-5">
-        <div class="col-6">
-            <div id="carouselExampleControls" class="carousel slide" data-bs-interval="false" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img src="~/image/@item.ImageCompanyExposeVM.ImageName" class="d-block w-100" alt="@item.ImageCompanyExposeVM.Title">
-                        </div>
-                </div>
-            </div>
-
+    <br />
+    <div class="row">
+        <div class="col-md-4 ">
+            <img src="~/image/@item.ImageCompanyExposeVM.ImageName" class="img-fluid rounded" alt="@item.ImageCompanyExposeVM.Title">
         </div>
-        <div class="col-6">
-            <div class="card" style="width: 20rem;">
+        <div class="col-md-4 g-0">
+            <div class="card" style="max-width: 35rem; border: none">
+                @*<div class="card-body">
+                    </div>*@
                 <div class="card-body">
-                    <h5 class="card-title">@item.Name</h5>
-                    <p class="card-text">@item.Description</p>
+                    <h4 class="card-title border-bottom mb-3"><span class="align-middle">@item.Name</span></h4>
+
+
+                    <p class="border-bottom"><span class="fw-bolder">Address: </span>@item.City, @item.StreetNameAndNumber</p>
+                    <p class="border-bottom"><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
+                    <p class="border-bottom"><span class="fw-bolder">Category: </span>@item.CompanyTypeName</p>
+                    <p class="border-bottom"><span class="fw-bolder">Open Hours: </span>@item.OpeningHours.ToShortTimeString() - @item.ClosingHours.ToShortTimeString()</p>
                 </div>
-                <hr>
-                <div class="card-body">
-                    <p><span class="fw-bolder">Address: </span>@item.City, @item.StreetNameAndNumber</p>
-                    <p><span class="fw-bolder">Contact: </span>@item.PhoneNumber</p>
-                    <p><span class="fw-bolder">Category: </span>@item.CompanyTypeName</p>
-                    <p><span class="fw-bolder">Open Hours: </span>@item.OpeningHours.ToShortTimeString() - @item.ClosingHours.ToShortTimeString()</p>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a asp-controller="Company" asp-action="ViewCompany" asp-route-id="@item.Id" class="btn btn-outline-dark me-md-2" type="button">Make an Appointment</a>
                 </div>
-                <a asp-controller="Company" asp-action="ViewCompany" id="@item.Id" type="button" class="btn btn-success">Make an Appointment</a>
             </div>
+    <hr />
         </div>
     </div>
 }

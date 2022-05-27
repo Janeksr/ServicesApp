@@ -124,9 +124,10 @@ namespace FeaturedServices.Web.Controllers
         }
 
         [AllowAnonymous]
+        [Route("{controller}/{action}/{id}")]
         public async Task<IActionResult> ViewCompany(int id)
         {
-            var model = companyRepository.GetCompanyForUser(id);
+            var model = await companyRepository.GetCompanyForUser(id);
             if (model == null) return NotFound();
             return View(model);
         }

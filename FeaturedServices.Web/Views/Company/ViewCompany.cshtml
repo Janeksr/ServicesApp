@@ -1,0 +1,169 @@
+﻿@model CompanyExposeVM
+
+<style>
+    #map {
+        height: 200px;
+        width: 100%;
+    }
+</style>
+<br />
+<div class="row">
+    <div class="col-lg-7">
+        <img src="~/image/@Model.ImageCompanyExposeVM.ImageName" class="d-block w-100 rounded" alt="@Model.ImageCompanyExposeVM.Title">
+    </div>
+    <div class="col-1"></div>
+    <div class="col-lg-4 ">
+        <div class="card bg-light text-dark  border-bottom" style="max-width: 35rem; border: none">
+            <!--The div element for the map -->
+            <div id="map"></div>
+            <div class="card-body">
+                <div class="alert alert-success" role="alert">
+                    <p class="text-center mb-0 fw-bold fs-3">@Model.Name</p>
+                    <p class="text-center mb-0">City <span class="fw-bolder">@Model.City</span>, street <span class="fw-bolder">@Model.StreetNameAndNumber</span></p>
+                </div>
+                <div class="row">
+                    <div class="d-flex border-top pt-3 pb-3">
+                        Employees:
+                        @foreach (var worker in @Model.WorkerServiceVMs)
+                        {
+                            <span class="mx-3">@worker.Firstname @worker.Lastname</span>
+                        }
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-flex border-top pt-3 pb-3">
+                        <div class="flex-grow-3 ms-2"><i class="fa-solid fa-phone align-middle fs-5"></i></div>
+                        <div class="flex-grow-1 ms-2"><span class="flex-grow-1 align-middle">@Model.PhoneNumber</span></div>
+                        <div class="flex-grow-2 mx-4"><a class="btn btn-sm btn-outline-success" type="button" href="tel:@Model.PhoneNumber">Make a Call</a></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="d-flex border-top pt-3 ">
+                        <div class="flex-grow-1 mx-3"><span class="fw-bolder align-middle">Open Hours: </span></div>
+                        <div class="flex-grow-2 mx-4"><span class="align-middle">@Model.OpeningHours.ToShortTimeString() - @Model.ClosingHours.ToShortTimeString()</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-7 col-md-10">
+        <p class="fs-3">Services</p>
+        <ul class="list-group list-group-flush">
+
+            @foreach (var item in Model.WorkerServiceVMs)
+            {
+                <li class="list-group-item">
+                    <div class="row d-flex align-content-between mb-3">
+                        <div class="col-9">
+                            <span class="fs-5">@item.Name</span>
+                        </div>
+                        <div class="col-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    @item.Value$
+                                    @item.Duration.ToShortTimeString()h
+                                </div>
+                                <div class="col-6">
+                                    <a class="btn btn-outline-success btn-sm">Make an Appointment</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                @*<p>@item.Name, @item.Duration.ToShortTimeString(), @item.Description, @item.Value</p>*@
+            }
+
+
+        </ul>
+    </div>
+</div>
+
+@*<div class="row">
+    <div class="col-5">
+        <div id="carouselExampleControls" class="carousel slide bg-light" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="card" style="width: 18rem;">
+                                <div class="card-body">
+                                    <h5 class="card-title">Card title</h5>
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>*@
+
+
+
+@section Scripts{
+<script>
+            // Initialize and add the map
+    function initMap() {
+      // The location of Uluru
+      const uluru = { lat: -25.344, lng: 131.031 };
+      // The map, centered at Uluru
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 4,
+        center: uluru,
+      });
+      // The marker, positioned at Uluru
+      const marker = new google.maps.Marker({
+        position: uluru,
+        map: map,
+      });
+    }
+
+    window.initMap = initMap;
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+        defer></script>
+}
