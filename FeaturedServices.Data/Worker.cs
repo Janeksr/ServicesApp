@@ -16,5 +16,7 @@ namespace FeaturedServices.Data
         [ForeignKey("CompanyId")]
         public Company Company { get; set; }
         public int CompanyId { get; set; }
+
+        public IList<Service> Services { get; set; }
     }
 }

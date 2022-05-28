@@ -29,15 +29,15 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task AddWorkerToCompany(WorkerVM workerVM)
         {
-            var company = await companyRepository.CheckCompanyEdit();
+            var companyId = (await companyRepository.CheckCompanyEdit()).Id;
             var worker = mapper.Map<Worker>(workerVM);
 
             var key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + worker.Lastname;
 
 
             worker.Key = RandomWorker.ComputeMd5Hash(key);
-            worker.CompanyId = company.Id;
-            context.Entry(company).State = EntityState.Detached;
+            worker.CompanyId = companyId;
+            //context.Entry(companyId).State = EntityState.Detached;
             await AddAsync(worker);
         }
 
@@ -52,13 +52,13 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<Worker> GetWorker(int id)
         {
-            var company = await companyRepository.CheckCompanyEdit();
+            var companyId = await companyRepository.GetCompanyId();
             var worker = await context.Workers.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (worker == null)
             {
                 return null;
             }
-            else if (worker.CompanyId != company.Id)
+            else if (worker.CompanyId != companyId)
             {
                 return null;
             }
@@ -83,9 +83,6 @@ namespace FeaturedServices.Application.Repositories
                 return;
             }
             await DeleteAsync(id);
-            var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
-            company.TotalServices--;
-            await companyRepository.UpdateAsync(company);
         }
     }
 }

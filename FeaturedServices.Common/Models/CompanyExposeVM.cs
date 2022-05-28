@@ -18,6 +18,6 @@ namespace FeaturedServices.Common.Models
         public DateTime ClosingHours { get; set; }
         public string CompanyTypeName { get; set; }
         public ImageCompanyExposeVM ImageCompanyExposeVM { get; set; }
-        public List<WorkerServiceVM> WorkerServiceVMs { get; set; }
+        public List<ListOfServicesVM> ListOfServicesVMs { get; set; }
     }
 }

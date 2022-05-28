@@ -64,8 +64,8 @@ namespace FeaturedServices.Application.Repositories
         }
         public async Task<Company> CheckCompanyEdit()
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
-            var company = context.Companies.Where(q => q.ClientId == user.Id).FirstOrDefault();
+            var userId = (await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User)).Id;
+            var company = context.Companies.Where(q => q.ClientId == userId).FirstOrDefault();
 
             if (company == null) return null;
 
@@ -167,35 +167,39 @@ namespace FeaturedServices.Application.Repositories
                     ClosingHours = company.ClosingHours,
                     CompanyTypeName = company.CompanyType.Name,
                     ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title },
-                    WorkerServiceVMs = await GetWorkersWithServicesUser(company.Id)
+                    ListOfServicesVMs = await GetWorkersWithServicesUser(company.Id)
                 };
                 return model;
             }
             return null;
         }
 
-        public async Task<List<WorkerServiceVM>> GetWorkersWithServicesUser(int id)
+        public async Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id)
         {
-            var model = await context.Services.Include(x => x.Worker).Where(x => x.Worker.CompanyId == id).ToListAsync();
+            var model = await context.Services.Include(x => x.Workers.Where(x => x.CompanyId == id)).ToListAsync();
 
-            var workerServicesList = new List<WorkerServiceVM>();
+            var workerServicesList = new List<ListOfServicesVM>();
             foreach (var service in model)
             {
-                var workerServices = new WorkerServiceVM
+                var workerServices = new ListOfServicesVM
                 {
                     Id = service.Id,
-                    Firstname = service.Worker.Firstname,
-                    Lastname = service.Worker.Lastname,
                     Name = service.Name,
                     Description = service.Description,
                     Value = service.Value,
-                    Duration = service.Duration,
-                    WorkerId = service.WorkerId
+                    Duration = service.Duration
                 };
                 workerServicesList.Add(workerServices);
             }
             return workerServicesList;
         }
 
+        public async Task<int> GetCompanyId()
+        {
+            var userId = (await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User)).Id;
+            var companyId = context.Companies.Where(q => q.ClientId == userId).FirstOrDefault().Id;
+
+            return companyId;
+        }
     }
 }

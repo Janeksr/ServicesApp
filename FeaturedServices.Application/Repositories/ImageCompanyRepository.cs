@@ -70,8 +70,8 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<bool> CheckIfCompanyHaveMainImage(Company company)
         {
-            var images = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
-            if (images == null) return true;
+            var images = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).AnyAsync();
+            if (images == true) return true;
 
             return false;
         }

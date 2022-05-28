@@ -1,4 +1,4 @@
-﻿@model IEnumerable<WorkerServiceVM>
+﻿@model IEnumerable<ListOfServicesVM>
 @{
     ViewData["Title"] = "ListOfServices";
 }
@@ -9,9 +9,6 @@
 <table class="table workersTable ">
     <thead>
         <tr>
-            <th>
-                Name
-            </th>
             <th>
                 Service
             </th>
@@ -33,10 +30,6 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Firstname)
-                    @Html.DisplayFor(modelItem => item.Lastname)
-                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>

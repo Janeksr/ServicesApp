@@ -27,7 +27,5 @@ namespace FeaturedServices.Common.Models
         [Required]
         [DataType(DataType.Currency)]
         public decimal Value { get; set; }
-
-        public int WorkerId { get; set; }
     }
 }

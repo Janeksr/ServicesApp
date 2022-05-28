@@ -14,11 +14,12 @@ namespace FeaturedServices.Application.Contracts
         Task<CompanyVM> GetCompanyDetails();
         Task<bool> UpdateCompany(int id, CompanyVM company);
         Task<Company> CheckCompanyEdit();
+        Task<int> GetCompanyId();
         Task AddTotalServices(Worker worker);
         Task RemoveTotalServices(Worker worker);
         Task<IQueryable<CompanyExposeVM>> GetAllCompanies();
         Task<CompanyExposeVM> GetCompany();
         Task<CompanyExposeVM> GetCompanyForUser(int id);
-        Task<List<WorkerServiceVM>> GetWorkersWithServicesUser(int id);
+        Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id);
     }
 }

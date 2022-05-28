@@ -20,6 +20,5 @@ namespace FeaturedServices.Common.Models
         [Display(Name = "First Name")]
         [MaxLength(50)]
         public string Lastname { get; set; }
-        public int NumverOfServices { get; set; }
     }
 }

@@ -33,7 +33,7 @@ namespace FeaturedServices.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     await workerRepository.AddWorkerToCompany(workerVM);
-                    return RedirectToAction("MyCompany", nameof(Company));
+                    return RedirectToAction("MyCompany", "Company");
                 }
             }
             catch (Exception ex)
@@ -63,7 +63,10 @@ namespace FeaturedServices.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     if (await workerRepository.UpdateWorker(workerVM))
+                    {
                         return RedirectToAction("MyCompany", "Company");
+                    }
+                    else return NotFound();
                 }
             }
             catch (Exception ex)
