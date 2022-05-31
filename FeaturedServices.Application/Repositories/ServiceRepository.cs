@@ -54,10 +54,10 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<List<ListOfServicesVM>> GetWorkersWithServices()
         {
-            var company = await companyRepository.CheckCompanyEdit();
+            var companyId = await companyRepository.GetCompanyId();
 
             var model = await context.Services
-                .Include(x => x.Workers.Where(x => x.CompanyId == company.Id))
+                .Where(x => x.CompanyId == companyId)
                 .ToListAsync();
 
             var servicesList = new List<ListOfServicesVM>();
@@ -87,7 +87,7 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id)
         {
-            var model = await context.Services.Include(x => x.Workers.Where(x => x.CompanyId == id)).ToListAsync();
+            var model = await context.Services.Where(x => x.CompanyId == id).ToListAsync();
 
             var servicesList = new List<ListOfServicesVM>();
             foreach (var service in model)

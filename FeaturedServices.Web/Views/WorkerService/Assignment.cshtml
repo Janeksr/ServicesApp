@@ -1,0 +1,12 @@
+﻿@model List<SelectListItem>
+
+<form method="post" asp-controller="WorkerService" asp-action="Assignment">
+    @foreach (var service in Model)
+    {
+        <input id="@service.Value" type="checkbox" name="selectedServices" value="@service.Value" />
+        <label for="@service.Value">@service.Text</label>
+        <br />
+    }
+    <br />
+    <input type="submit" value="Submit" />
+</form>

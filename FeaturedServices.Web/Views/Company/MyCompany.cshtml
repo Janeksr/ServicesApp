@@ -66,6 +66,8 @@
             <dd class="col-sm-7">
                 @Html.DisplayFor(model => model.companyVM.CompanyType.Name)
             </dd>
+            <a asp-action="Edit" asp-route-id="@Model.companyVM.Id" type="button" class="btn btn-primary">Edit @Model.companyVM.Name</a>
+
         </dl>
     </div>
     <div class="col-6">
@@ -97,13 +99,12 @@
             </tbody>
         </table>
         <p>To make your company visible, you need to add at least one employee as well as a service and a photo.</p>
-        <a class="btn btn-success btn-sm ms-2" asp-controller="Service" asp-action="AddService">Add Service</a>
     </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.companyVM.Id" type="button" class="btn btn-primary">Edit @Model.companyVM.Name</a>
-    <a asp-controller="Worker" asp-action="AddWorker" type="button" class="btn btn-success">Add Worker</a>
-    <a class="btn btn-secondary ms-2" asp-controller="Service" asp-action="ListOfServices">Show Services</a>
+    <a asp-controller="Worker" asp-action="AddWorker" type="button" class="btn btn-sm btn-dark">Add Employee</a>
+    <a class="btn btn-success btn-sm ms-2" asp-controller="Service" asp-action="AddService">Add Service</a>
+    <a class="btn btn-secondary btn-sm ms-2" asp-controller="Service" asp-action="ListOfServices">Show Services</a>
 </div>
 
 
@@ -125,33 +126,33 @@
 </form>
 
 @section Scripts{
-<script>
-    $(function() {
-        $('.workersTable').DataTable({
-            //"columns": [
-            //         { "width": "80%" },
-            //         { "width": "25%" }
-            //],
-            "dom": 'lrtip',
-            "paging": false,
-            "info": false
-        });
-        $('.deleteBtn').click(function(e) {
-            swal({
-                title: "Are you sure?",
-                text: "Are you sure you want to delete this employee and his services?",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true
-            }).then((confirm) => {
-                if (confirm) {
-                    const btn = $(this);
-                    const id = btn.data("id");
-                    $('#workerId').val(id);
-                    $('#deleteForm').submit();
-                }
+    <script>
+        $(function() {
+            $('.workersTable').DataTable({
+                //"columns": [
+                //         { "width": "80%" },
+                //         { "width": "25%" }
+                //],
+                "dom": 'lrtip',
+                "paging": false,
+                "info": false
+            });
+            $('.deleteBtn').click(function(e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to delete this employee and his services?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+                    if (confirm) {
+                        const btn = $(this);
+                        const id = btn.data("id");
+                        $('#workerId').val(id);
+                        $('#deleteForm').submit();
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 }

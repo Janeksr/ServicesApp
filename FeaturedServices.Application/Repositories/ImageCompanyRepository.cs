@@ -40,13 +40,13 @@ namespace FeaturedServices.Application.Repositories
 
             var date = DateTime.Now.ToString("yymmssfff");
 
-            var company = await companyRepository.CheckCompanyEdit();
+            var companyId = await companyRepository.GetCompanyId();
 
-            if (await CheckIfCompanyHaveMainImage(company))
+            if (await CheckIfCompanyHaveMainImage(companyId))
             {
                 imageCompany.MainImage = true;
                 imageCompany.ImageName = fileName + date + extension;
-                imageCompany.CompanyId = company.Id;
+                imageCompany.CompanyId = companyId;
 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
@@ -68,12 +68,12 @@ namespace FeaturedServices.Application.Repositories
             return false;
         }
 
-        public async Task<bool> CheckIfCompanyHaveMainImage(Company company)
+        public async Task<bool> CheckIfCompanyHaveMainImage(int companyId)
         {
-            var images = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).AnyAsync();
-            if (images == true) return true;
+            var images = await context.ImageCompanies.Where(x => x.CompanyId == companyId).Where(x => x.MainImage == true).AnyAsync();
+            if (images == true) return false;
 
-            return false;
+            return true;
         }
 
         public async Task DeleteImage(ImageCompany image)

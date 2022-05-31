@@ -176,7 +176,7 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id)
         {
-            var model = await context.Services.Include(x => x.Workers.Where(x => x.CompanyId == id)).ToListAsync();
+            var model = await context.Services.Where(x => x.CompanyId == id).ToListAsync();
 
             var workerServicesList = new List<ListOfServicesVM>();
             foreach (var service in model)
@@ -197,7 +197,7 @@ namespace FeaturedServices.Application.Repositories
         public async Task<int> GetCompanyId()
         {
             var userId = (await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User)).Id;
-            var companyId = context.Companies.Where(q => q.ClientId == userId).FirstOrDefault().Id;
+            var companyId = context.Companies.Where(q => q.ClientId == userId).Select(x => x.Id).FirstOrDefault();
 
             return companyId;
         }

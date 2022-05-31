@@ -29,7 +29,7 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task AddWorkerToCompany(WorkerVM workerVM)
         {
-            var companyId = (await companyRepository.CheckCompanyEdit()).Id;
+            var companyId = await companyRepository.GetCompanyId();
             var worker = mapper.Map<Worker>(workerVM);
 
             var key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + worker.Lastname;
@@ -43,8 +43,8 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<List<WorkerVM>> GetWorkers()
         {
-            var company = await companyRepository.CheckCompanyEdit();
-            var workers = await context.Workers.Where(x => x.CompanyId == company.Id).ToListAsync();
+            var companyId = await companyRepository.GetCompanyId();
+            var workers = await context.Workers.Where(x => x.CompanyId == companyId).ToListAsync();
             
             var workerVM = mapper.Map<List<WorkerVM>>(workers);
             return workerVM;

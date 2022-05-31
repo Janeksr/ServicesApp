@@ -48,7 +48,7 @@ namespace FeaturedServices.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteMainImage()
         {
-            var companyId = (await companyRepository.CheckCompanyEdit()).Id;
+            var companyId = await companyRepository.GetCompanyId();
             var image = context.ImageCompanies.Where(x => x.CompanyId == companyId).Where(x => x.MainImage == true).FirstOrDefault();
             if (image != null)
             {
