@@ -20,6 +20,6 @@ namespace FeaturedServices.Data
         public Company Company { get; set; }
         public int CompanyId { get; set; }
 
-        public ICollection<WorkerService> WorkerServices { get; set; }
+        public ICollection<Worker_Service> Workers_Services { get; set; }
     }
 }

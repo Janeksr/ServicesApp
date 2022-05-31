@@ -27,8 +27,8 @@ namespace FeaturedServices.Web.Controllers
                 foreach (var service in model.selectedServices)
                 {
                     
-                    var workerService = new WorkerService { WorkerId = 1, ServiceId = service };
-                    context.WorkerServices.Update(workerService);
+                    var workerService = new Worker_Service { WorkerId = 1, ServiceId = service };
+                    context.Workers_Services.Update(workerService);
                 }
                 context.SaveChanges();
             }

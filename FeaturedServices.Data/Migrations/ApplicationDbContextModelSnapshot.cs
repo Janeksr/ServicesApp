@@ -105,7 +105,7 @@ namespace FeaturedServices.Data.Migrations
                         {
                             Id = "408121ad-b63e-49ff-1d02-6c221af8ace4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "02ecb3e2-9f0d-47eb-94a2-b20b386405c4",
+                            ConcurrencyStamp = "212ab688-bec3-4770-9e98-18f4f69c4f01",
                             DateJoined = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@localhost.com",
@@ -115,9 +115,9 @@ namespace FeaturedServices.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGgKBFmvY85pOn55/IIHY6flhli0d3z0GbYODGjK4Iby0E1GYEFPXS19Qg3whw2Y9g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDL6E3JyOpgDxn7L36jDDhb4cTUY9yov+PpLVl33AdRxSACwTy5sxIwk9dOOMCsv7Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e2011f32-c40d-4dbd-b699-0f70d8c5b2e7",
+                            SecurityStamp = "92ebb30a-334f-429e-b44b-446461af6a9d",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -125,7 +125,7 @@ namespace FeaturedServices.Data.Migrations
                         {
                             Id = "fa23f1aa-b63e-49ff-1d02-2c661cf8ace4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1ca808f2-4ded-4432-bebe-5a8c9bafdae7",
+                            ConcurrencyStamp = "a411828b-aaf2-4823-b068-a98f72a394ec",
                             DateJoined = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user@localhost.com",
@@ -135,9 +135,9 @@ namespace FeaturedServices.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJyLgjeOSvY6PMlyaOLCwcyujfPeprObLaDvpm6ta2CEwdsFCjLfteHv1RJyrOrnEQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAENaCEgHx7Gg6JRvuK7ZcR1FMOPhe4wg51XiE59SiMVyvlXKu29thBFaY/rmeJQ8Ydg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e2c55858-80bd-4290-9930-85586bc481cd",
+                            SecurityStamp = "5459baf5-5f16-407e-af20-7f678a3cc3db",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });
@@ -330,19 +330,27 @@ namespace FeaturedServices.Data.Migrations
                     b.ToTable("Workers");
                 });
 
-            modelBuilder.Entity("FeaturedServices.Data.WorkerService", b =>
+            modelBuilder.Entity("FeaturedServices.Data.Worker_Service", b =>
                 {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
                     b.Property<int>("ServiceId")
                         .HasColumnType("int");
 
                     b.Property<int>("WorkerId")
                         .HasColumnType("int");
 
-                    b.HasKey("ServiceId", "WorkerId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceId");
 
                     b.HasIndex("WorkerId");
 
-                    b.ToTable("WorkerServices");
+                    b.ToTable("Workers_Services");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -375,28 +383,28 @@ namespace FeaturedServices.Data.Migrations
                         new
                         {
                             Id = "0f6121ad-b6be-49ff-9d02-6c442008ace4",
-                            ConcurrencyStamp = "4a8d8e7e-7715-4d1b-8732-b3c6056bae6b",
+                            ConcurrencyStamp = "71eb88c9-b9c6-4259-9088-b5a75b7e63af",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "0f61aaac-b21e-a9ff-9e02-64432001abe4",
-                            ConcurrencyStamp = "0b2034f6-d041-44b5-8a5d-4d863d77f6af",
+                            ConcurrencyStamp = "c0377522-ede2-4b4a-858a-b48d7a5c4b3d",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "626a4a0c-b21e-a9ab-9e32-144f20a1bced",
-                            ConcurrencyStamp = "a557b255-d496-4abc-b4d4-8b379b9b58eb",
+                            ConcurrencyStamp = "4998eb56-3f29-412e-97c6-5752bbc93d6d",
                             Name = "Company",
                             NormalizedName = "COMPANY"
                         },
                         new
                         {
                             Id = "6261baec-128e-a0ab-ae32-164f20a1bced",
-                            ConcurrencyStamp = "84dc4249-b91a-4862-9f88-9a979537d403",
+                            ConcurrencyStamp = "eb520027-fc57-40d3-bfdf-8f316bf87bda",
                             Name = "CompanyCreated",
                             NormalizedName = "COMPANYCREATED"
                         });
@@ -564,16 +572,16 @@ namespace FeaturedServices.Data.Migrations
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("FeaturedServices.Data.WorkerService", b =>
+            modelBuilder.Entity("FeaturedServices.Data.Worker_Service", b =>
                 {
                     b.HasOne("FeaturedServices.Data.Service", "Service")
-                        .WithMany("WorkerServices")
+                        .WithMany("Workers_Services")
                         .HasForeignKey("ServiceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FeaturedServices.Data.Worker", "Worker")
-                        .WithMany("WorkerServices")
+                        .WithMany("Workers_Services")
                         .HasForeignKey("WorkerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -636,12 +644,12 @@ namespace FeaturedServices.Data.Migrations
 
             modelBuilder.Entity("FeaturedServices.Data.Service", b =>
                 {
-                    b.Navigation("WorkerServices");
+                    b.Navigation("Workers_Services");
                 });
 
             modelBuilder.Entity("FeaturedServices.Data.Worker", b =>
                 {
-                    b.Navigation("WorkerServices");
+                    b.Navigation("Workers_Services");
                 });
 #pragma warning restore 612, 618
         }

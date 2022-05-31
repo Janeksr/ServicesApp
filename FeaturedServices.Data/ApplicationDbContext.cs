@@ -18,15 +18,15 @@ namespace FeaturedServices.Data
             builder.ApplyConfiguration(new RoleSeedConfiguration());
             builder.ApplyConfiguration(new UserSeedConfiguration());
             builder.ApplyConfiguration(new UserRoleSeedConfiguration());
-            builder.Entity<WorkerService>()
-                   .HasKey(bc => new { bc.ServiceId, bc.WorkerId });
-            builder.Entity<WorkerService>()
+
+            builder.Entity<Worker_Service>()
                 .HasOne(bc => bc.Service)
-                .WithMany(b => b.WorkerServices)
+                .WithMany(b => b.Workers_Services)
                 .HasForeignKey(bc => bc.ServiceId);
-            builder.Entity<WorkerService>()
+
+            builder.Entity<Worker_Service>()
                 .HasOne(bc => bc.Worker)
-                .WithMany(c => c.WorkerServices)
+                .WithMany(c => c.Workers_Services)
                 .HasForeignKey(bc => bc.WorkerId);
         }
 
@@ -34,7 +34,7 @@ namespace FeaturedServices.Data
         public DbSet<CompanyType> CompanyTypes { get; set; }
         public DbSet<Worker> Workers { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<WorkerService> WorkerServices { get; set; }
+        public DbSet<Worker_Service> Workers_Services { get; set; }
 
 
         public DbSet<ImageCompany> ImageCompanies { get; set; }
