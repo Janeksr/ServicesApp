@@ -120,8 +120,14 @@ namespace FeaturedServices.Application.Repositories
         public async Task<CompanyExposeVM> GetCompany()
         {
             var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
-            var company = context.Companies.Include(x => x.CompanyType).Where(x => x.ClientId == user.Id).Where(x => x.TotalServices > 0).FirstOrDefault();
+            var company = context.Companies.Include(x => x.CompanyType).Where(x => x.ClientId == user.Id).FirstOrDefault();
             if (company == null) return null;
+
+            var test = context.Workers.Include(x => x.Workers_Services.Where(x => x.))
+
+            if (false) return null;
+
+
 
             var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
 
@@ -148,7 +154,8 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<CompanyExposeVM> GetCompanyForUser(int id)
         {
-            var company = context.Companies.Include(x => x.CompanyType).Where(x => x.Id == id).Where(x => x.TotalServices > 0).FirstOrDefault();
+            if (!context.Workers.Include(x => x.Workers_Services).Where(x => x.CompanyId == id).Any()) return null;
+            var company = context.Companies.Include(x => x.CompanyType).Where(x => x.Id == id).FirstOrDefault();
             if (company == null) return null;
 
             var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();

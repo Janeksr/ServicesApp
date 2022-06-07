@@ -291,14 +291,12 @@ namespace FeaturedServices.Data.Migrations
                         name: "FK_Workers_Services_Services_ServiceId",
                         column: x => x.ServiceId,
                         principalTable: "Services",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Workers_Services_Workers_WorkerId",
                         column: x => x.WorkerId,
                         principalTable: "Workers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -306,10 +304,10 @@ namespace FeaturedServices.Data.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0f6121ad-b6be-49ff-9d02-6c442008ace4", "71eb88c9-b9c6-4259-9088-b5a75b7e63af", "Administrator", "ADMINISTRATOR" },
-                    { "0f61aaac-b21e-a9ff-9e02-64432001abe4", "c0377522-ede2-4b4a-858a-b48d7a5c4b3d", "User", "USER" },
-                    { "6261baec-128e-a0ab-ae32-164f20a1bced", "eb520027-fc57-40d3-bfdf-8f316bf87bda", "CompanyCreated", "COMPANYCREATED" },
-                    { "626a4a0c-b21e-a9ab-9e32-144f20a1bced", "4998eb56-3f29-412e-97c6-5752bbc93d6d", "Company", "COMPANY" }
+                    { "0f6121ad-b6be-49ff-9d02-6c442008ace4", "415eaa81-2d77-4239-9c76-aea8d04ce623", "Administrator", "ADMINISTRATOR" },
+                    { "0f61aaac-b21e-a9ff-9e02-64432001abe4", "58729659-453e-4b01-90c2-dbf114e1ebbf", "User", "USER" },
+                    { "6261baec-128e-a0ab-ae32-164f20a1bced", "2126364d-e5ab-4329-b9e9-3f115100d229", "CompanyCreated", "COMPANYCREATED" },
+                    { "626a4a0c-b21e-a9ab-9e32-144f20a1bced", "81100c04-f6b0-470d-9b49-44cf2282a0fc", "Company", "COMPANY" }
                 });
 
             migrationBuilder.InsertData(
@@ -317,8 +315,8 @@ namespace FeaturedServices.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "DateJoined", "DateOfBirth", "Email", "EmailConfirmed", "Firstname", "Lastname", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "408121ad-b63e-49ff-1d02-6c221af8ace4", 0, "212ab688-bec3-4770-9e98-18f4f69c4f01", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAEAACcQAAAAEDL6E3JyOpgDxn7L36jDDhb4cTUY9yov+PpLVl33AdRxSACwTy5sxIwk9dOOMCsv7Q==", null, false, "92ebb30a-334f-429e-b44b-446461af6a9d", false, "admin@localhost.com" },
-                    { "fa23f1aa-b63e-49ff-1d02-2c661cf8ace4", 0, "a411828b-aaf2-4823-b068-a98f72a394ec", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAEAACcQAAAAENaCEgHx7Gg6JRvuK7ZcR1FMOPhe4wg51XiE59SiMVyvlXKu29thBFaY/rmeJQ8Ydg==", null, false, "5459baf5-5f16-407e-af20-7f678a3cc3db", false, "user@localhost.com" }
+                    { "408121ad-b63e-49ff-1d02-6c221af8ace4", 0, "86a4bfaf-f836-4401-bec0-342ae6ea768a", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "admin@localhost.com", true, "System", "Admin", false, null, "ADMIN@LOCALHOST.COM", "ADMIN@LOCALHOST.COM", "AQAAAAEAACcQAAAAEHRPxA9ZN0qUVuXFsSpIvF2EjPiv5/AzOihp4my8BPI326MjPKSCrjpoMb+PGbQQEA==", null, false, "10d24d3e-4a8d-46b2-98aa-b812c52d4354", false, "admin@localhost.com" },
+                    { "fa23f1aa-b63e-49ff-1d02-2c661cf8ace4", 0, "5948869d-8a80-4dd7-b905-0c1990b143db", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "user@localhost.com", true, "System", "User", false, null, "USER@LOCALHOST.COM", "USER@LOCALHOST.COM", "AQAAAAEAACcQAAAAEJUxJPLeeLK9538X8wuAspGPjFMPoO2APIFJvX/CVkLGUAaNQfKfGcbx/QcCF7VAXQ==", null, false, "8fc4a55f-ee13-49f2-a129-3374ba677199", false, "user@localhost.com" }
                 });
 
             migrationBuilder.InsertData(

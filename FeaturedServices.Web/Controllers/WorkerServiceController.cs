@@ -1,57 +1,52 @@
-﻿using FeaturedServices.Data;
+﻿using FeaturedServices.Application.Contracts;
+using FeaturedServices.Common.Constants;
+using FeaturedServices.Common.Models;
+using FeaturedServices.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FeaturedServices.Web.Controllers
 {
+    [Authorize(Roles = Roles.CompanyCreated)]
     public class WorkerServiceController : Controller
     {
         private readonly ApplicationDbContext context;
+        private readonly IWorkersServicesRepository workersServicesRepository;
+        private readonly IWorkerRepository workerRepository;
 
-        public WorkerServiceController(ApplicationDbContext context)
+        public WorkerServiceController(ApplicationDbContext context, IWorkersServicesRepository workersServicesRepository, IWorkerRepository workerRepository)
         {
             this.context = context;
+            this.workersServicesRepository = workersServicesRepository;
+            this.workerRepository = workerRepository;
         }
-        public IActionResult Assignment()
+        public async Task<IActionResult> Assignment(int id)
         {
-            var model = PopulateSevices();
+            var worker = await workerRepository.GetWorker(id);
+            var servicesList = await workersServicesRepository.PopulateSevices(worker.Id);
+            if (servicesList.Count == 0)
+            {
+                return RedirectToAction("MyCompany", "Company", new { error = "CustomError", errorMsg = "You do not have any services." });
+            }
+            if (worker == null) return NotFound();
+            var model = new AssignWorkerWithServicesVM(id, servicesList, worker.Firstname, worker.Lastname);
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Assignment(ModelOfCheckedVals model)
+        public async Task<IActionResult> Assignment(AssignWorkerWithServicesPostVM model)
         {
             if (ModelState.IsValid)
             {
-                foreach (var service in model.selectedServices)
-                {
-                    
-                    var workerService = new Worker_Service { WorkerId = 1, ServiceId = service };
-                    context.Workers_Services.Update(workerService);
-                }
-                context.SaveChanges();
-            }
-            return View(model);
-        }
+                if(!await workerRepository.CheckWorkerId(model.WorkerId)) 
+                    return RedirectToAction("MyCompany", "Company", new { error = "CustomError", errorMsg = "An error has occured." });
 
-        private List<SelectListItem> PopulateSevices()
-        {
-            List<SelectListItem> servicesList = new List<SelectListItem>();
-            var services = context.Services.Where(x => x.CompanyId == 1).Select(x => new { x.Name, x.Id }).ToList();
-            foreach (var service in services)
-            {
-                servicesList.Add(new SelectListItem
-                {
-                    Text = service.Name,
-                    Value = service.Id.ToString()
-                });
+                await workersServicesRepository.UpdateWorkerServiceAssignment(model);
             }
-            return servicesList;
-        }
-        public class ModelOfCheckedVals
-        {
-            public List<int> selectedServices { get; set; }
+            return RedirectToAction("MyCompany", "Company");
         }
     }
 }

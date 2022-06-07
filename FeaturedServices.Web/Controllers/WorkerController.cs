@@ -13,11 +13,13 @@ namespace FeaturedServices.Web.Controllers
     {
         private readonly IWorkerRepository workerRepository;
         private readonly IMapper mapper;
+        private readonly ApplicationDbContext context;
 
-        public WorkerController(IWorkerRepository workerRepository, IMapper mapper)
+        public WorkerController(IWorkerRepository workerRepository, IMapper mapper, ApplicationDbContext context)
         {
             this.workerRepository = workerRepository;
             this.mapper = mapper;
+            this.context = context;
         }
         public IActionResult AddWorker()
         {
@@ -78,6 +80,13 @@ namespace FeaturedServices.Web.Controllers
 
         public async Task<IActionResult> DeleteWorker(int id)
         {
+            var test = context.Workers_Services.Where(x => x.WorkerId == id).ToList();
+            foreach (var item in test)
+            {
+                context.Remove(item);
+            }
+            context.SaveChanges();
+
             await workerRepository.DeleteWorker(id);
             return RedirectToAction("MyCompany", "Company");
         }

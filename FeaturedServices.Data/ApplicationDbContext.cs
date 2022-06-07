@@ -22,12 +22,14 @@ namespace FeaturedServices.Data
             builder.Entity<Worker_Service>()
                 .HasOne(bc => bc.Service)
                 .WithMany(b => b.Workers_Services)
-                .HasForeignKey(bc => bc.ServiceId);
+                .HasForeignKey(bc => bc.ServiceId)
+                .OnDelete(DeleteBehavior.ClientCascade);
 
             builder.Entity<Worker_Service>()
                 .HasOne(bc => bc.Worker)
                 .WithMany(c => c.Workers_Services)
-                .HasForeignKey(bc => bc.WorkerId);
+                .HasForeignKey(bc => bc.WorkerId)
+                .OnDelete(DeleteBehavior.ClientCascade);
         }
 
         public DbSet<Company> Companies { get; set; }

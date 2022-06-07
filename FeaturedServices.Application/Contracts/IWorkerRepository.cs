@@ -13,6 +13,7 @@ namespace FeaturedServices.Application.Contracts
         Task AddWorkerToCompany(WorkerVM workerVM);
         Task<List<WorkerVM>> GetWorkers();
         Task<Worker> GetWorker(int id);
+        Task<bool> CheckWorkerId(int id);
         Task<bool> UpdateWorker(WorkerVM workerVM);
         Task DeleteWorker(int id);
     }

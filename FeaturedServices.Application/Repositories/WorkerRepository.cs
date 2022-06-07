@@ -84,5 +84,20 @@ namespace FeaturedServices.Application.Repositories
             }
             await DeleteAsync(id);
         }
+
+        public async Task<bool> CheckWorkerId(int id)
+        {
+            var companyId = await companyRepository.GetCompanyId();
+            var workerCompanyId = await context.Workers.Where(x => x.Id == id).Select(x => x.CompanyId).FirstOrDefaultAsync();
+            if (workerCompanyId == 0)
+            {
+                return false;
+            }
+            else if (workerCompanyId != companyId)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FeaturedServices.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220531162358_FirstMigration")]
+    [Migration("20220601075136_FirstMigration")]
     partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace FeaturedServices.Data.Migrations
                         {
                             Id = "408121ad-b63e-49ff-1d02-6c221af8ace4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "212ab688-bec3-4770-9e98-18f4f69c4f01",
+                            ConcurrencyStamp = "86a4bfaf-f836-4401-bec0-342ae6ea768a",
                             DateJoined = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@localhost.com",
@@ -117,9 +117,9 @@ namespace FeaturedServices.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDL6E3JyOpgDxn7L36jDDhb4cTUY9yov+PpLVl33AdRxSACwTy5sxIwk9dOOMCsv7Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEHRPxA9ZN0qUVuXFsSpIvF2EjPiv5/AzOihp4my8BPI326MjPKSCrjpoMb+PGbQQEA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "92ebb30a-334f-429e-b44b-446461af6a9d",
+                            SecurityStamp = "10d24d3e-4a8d-46b2-98aa-b812c52d4354",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -127,7 +127,7 @@ namespace FeaturedServices.Data.Migrations
                         {
                             Id = "fa23f1aa-b63e-49ff-1d02-2c661cf8ace4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a411828b-aaf2-4823-b068-a98f72a394ec",
+                            ConcurrencyStamp = "5948869d-8a80-4dd7-b905-0c1990b143db",
                             DateJoined = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             DateOfBirth = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "user@localhost.com",
@@ -137,9 +137,9 @@ namespace FeaturedServices.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@LOCALHOST.COM",
                             NormalizedUserName = "USER@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAENaCEgHx7Gg6JRvuK7ZcR1FMOPhe4wg51XiE59SiMVyvlXKu29thBFaY/rmeJQ8Ydg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJUxJPLeeLK9538X8wuAspGPjFMPoO2APIFJvX/CVkLGUAaNQfKfGcbx/QcCF7VAXQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5459baf5-5f16-407e-af20-7f678a3cc3db",
+                            SecurityStamp = "8fc4a55f-ee13-49f2-a129-3374ba677199",
                             TwoFactorEnabled = false,
                             UserName = "user@localhost.com"
                         });
@@ -385,28 +385,28 @@ namespace FeaturedServices.Data.Migrations
                         new
                         {
                             Id = "0f6121ad-b6be-49ff-9d02-6c442008ace4",
-                            ConcurrencyStamp = "71eb88c9-b9c6-4259-9088-b5a75b7e63af",
+                            ConcurrencyStamp = "415eaa81-2d77-4239-9c76-aea8d04ce623",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
                             Id = "0f61aaac-b21e-a9ff-9e02-64432001abe4",
-                            ConcurrencyStamp = "c0377522-ede2-4b4a-858a-b48d7a5c4b3d",
+                            ConcurrencyStamp = "58729659-453e-4b01-90c2-dbf114e1ebbf",
                             Name = "User",
                             NormalizedName = "USER"
                         },
                         new
                         {
                             Id = "626a4a0c-b21e-a9ab-9e32-144f20a1bced",
-                            ConcurrencyStamp = "4998eb56-3f29-412e-97c6-5752bbc93d6d",
+                            ConcurrencyStamp = "81100c04-f6b0-470d-9b49-44cf2282a0fc",
                             Name = "Company",
                             NormalizedName = "COMPANY"
                         },
                         new
                         {
                             Id = "6261baec-128e-a0ab-ae32-164f20a1bced",
-                            ConcurrencyStamp = "eb520027-fc57-40d3-bfdf-8f316bf87bda",
+                            ConcurrencyStamp = "2126364d-e5ab-4329-b9e9-3f115100d229",
                             Name = "CompanyCreated",
                             NormalizedName = "COMPANYCREATED"
                         });
@@ -579,13 +579,13 @@ namespace FeaturedServices.Data.Migrations
                     b.HasOne("FeaturedServices.Data.Service", "Service")
                         .WithMany("Workers_Services")
                         .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.HasOne("FeaturedServices.Data.Worker", "Worker")
                         .WithMany("Workers_Services")
                         .HasForeignKey("WorkerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
                     b.Navigation("Service");
