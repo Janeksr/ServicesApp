@@ -9,7 +9,7 @@ namespace FeaturedServices.Common.Models
 {
     public class AssignWorkerWithServicesPostVM
     {
-        public List<int> SelectedServices { get; set; }
+        public List<int>? SelectedServices { get; set; }
         public int WorkerId { get; set; }
 
     }

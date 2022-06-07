@@ -24,6 +24,7 @@ namespace FeaturedServices.Web.Controllers
         public async Task<IActionResult> Assignment(int id)
         {
             var worker = await workerRepository.GetWorker(id);
+            if(worker == null) return RedirectToAction("MyCompany", "Company", new { error = "CustomError", errorMsg = "That's not your employee." });
             var servicesList = await workersServicesRepository.PopulateSevices(worker.Id);
             if (servicesList.Count == 0)
             {

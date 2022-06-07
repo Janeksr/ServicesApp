@@ -11,7 +11,7 @@ namespace FeaturedServices.Application.Contracts
     public interface IWorkerRepository : IGenericRepository<Worker>
     {
         Task AddWorkerToCompany(WorkerVM workerVM);
-        Task<List<WorkerVM>> GetWorkers();
+        Task<List<WorkerServicesNbVM>> GetWorkers();
         Task<Worker> GetWorker(int id);
         Task<bool> CheckWorkerId(int id);
         Task<bool> UpdateWorker(WorkerVM workerVM);

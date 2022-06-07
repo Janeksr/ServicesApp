@@ -71,9 +71,9 @@ namespace FeaturedServices.Web.Controllers
         {
             var company = await companyRepository.GetCompanyDetails();
             var haveImage = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).AnyAsync(x => x.MainImage == true);
-            var workerVMs = await workerRepository.GetWorkers();
+            var workerServicesNbVMs = await workerRepository.GetWorkers();
 
-            var model = new CompanyPanelVM { companyVM = company, workerVM = workerVMs, HaveImage = haveImage };
+            var model = new CompanyPanelVM { companyVM = company, workerVMs = workerServicesNbVMs, HaveImage = haveImage };
             
             if(error != null && errorMsg != null) ModelState.AddModelError(error, errorMsg);
 

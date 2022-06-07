@@ -41,13 +41,13 @@ namespace FeaturedServices.Application.Repositories
             await AddAsync(worker);
         }
 
-        public async Task<List<WorkerVM>> GetWorkers()
+        public async Task<List<WorkerServicesNbVM>> GetWorkers()
         {
             var companyId = await companyRepository.GetCompanyId();
             var workers = await context.Workers.Where(x => x.CompanyId == companyId).ToListAsync();
             
-            var workerVM = mapper.Map<List<WorkerVM>>(workers);
-            return workerVM;
+            var workerServicesNbVM = mapper.Map<List<WorkerServicesNbVM>>(workers);
+            return workerServicesNbVM;
         }
 
         public async Task<Worker> GetWorker(int id)

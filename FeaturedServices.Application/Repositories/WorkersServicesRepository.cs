@@ -45,36 +45,57 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task UpdateWorkerServiceAssignment(AssignWorkerWithServicesPostVM model)
         {
+            var worker = await workerRepository.GetAsync(model.WorkerId);
             var selectedServicesInDb = await context.Workers_Services.Where(x => x.WorkerId == model.WorkerId).ToListAsync();
             if (!selectedServicesInDb.Any())
             {
                 foreach (var service in model.SelectedServices)
                 {
                     var workerService = new Worker_Service { WorkerId = model.WorkerId, ServiceId = service };
-                    await context.Workers_Services.AddAsync(workerService);
+                    await AddAsync(workerService);
                 }
-                await context.SaveChangesAsync();
+
             }
             else
             {
-                var test = model.SelectedServices.Except(selectedServicesInDb.Select(x => x.ServiceId));
+                var selectedServicesInDbAfterUpdate = await context.Workers_Services.Where(x => x.WorkerId == model.WorkerId).ToListAsync();
+
+                //Removing all assignment
+                if (model.SelectedServices == null)
+                {
+                    var assignmentToRemove = selectedServicesInDbAfterUpdate.Select(x => x.ServiceId);
+                    foreach (var item in assignmentToRemove)
+                    {
+                        context.Workers_Services.Remove(selectedServicesInDbAfterUpdate.Where(x => x.ServiceId == item).First());
+                    }
+                    await context.SaveChangesAsync();
+
+                    worker.TotalServices = 0;
+                    await workerRepository.UpdateAsync(worker);
+                    return;
+                }
+
+
                 //The following lines are in NEW LIST but not in DB
-                foreach (var item in test)
+                var newAssignment = model.SelectedServices.Except(selectedServicesInDb.Select(x => x.ServiceId));
+                foreach (var item in newAssignment)
                 {
                     var workerService = new Worker_Service { WorkerId = model.WorkerId, ServiceId = item };
-                    await context.Workers_Services.AddAsync(workerService);
+                    await AddAsync(workerService);
                 }
-                await context.SaveChangesAsync();
 
-                var selectedServicesInDbAfterUpdate = await context.Workers_Services.Where(x => x.WorkerId == model.WorkerId).ToListAsync();
-                var test2 = selectedServicesInDbAfterUpdate.Select(x => x.ServiceId).Except(model.SelectedServices);
+
                 //The following lines are in DB but not in NEW LIST
-                foreach (var item in test2)
+                var oldAssignment = selectedServicesInDbAfterUpdate.Select(x => x.ServiceId).Except(model.SelectedServices);
+                foreach (var item in oldAssignment)
                 {
                     context.Workers_Services.Remove(selectedServicesInDbAfterUpdate.Where(x => x.ServiceId == item).First());
                 }
+
                 await context.SaveChangesAsync();
             }
+            worker.TotalServices = model.SelectedServices.Count();
+            await workerRepository.UpdateAsync(worker);
         }
     }
 }

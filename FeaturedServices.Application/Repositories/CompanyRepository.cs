@@ -72,44 +72,39 @@ namespace FeaturedServices.Application.Repositories
             return company;
         }
 
-        public async Task AddTotalServices(Worker worker)
-        {
-            var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
-            var newNumber = company.TotalServices++;
-            await UpdateAsync(company);
-        }
-
-        public async Task RemoveTotalServices(Worker worker)
-        {
-            var company = await context.Companies.Where(x => x.Id == worker.CompanyId).FirstOrDefaultAsync();
-            var newNumber = company.TotalServices--;
-            await UpdateAsync(company);
-        }
-
         public async Task<IQueryable<CompanyExposeVM>> GetAllCompanies()
         {
-            var companies = await context.Companies.Include(x => x.CompanyType).Where(x => x.TotalServices > 0).ToListAsync();
+
+            var companies = await context.Workers.Include(x => x.Company).ThenInclude(x => x.CompanyType)
+                .Select(x => new
+                {
+                    x.Company,
+                    x.TotalServices,
+                    x.Company.CompanyType.Name
+                })
+                .Where(x => x.TotalServices > 0)
+                .Distinct()
+                .ToListAsync();
+
             var modelList = new List<CompanyExposeVM>();
-            foreach (var company in companies)
+            foreach (var item in companies)
             {
-                var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
+                var image = await context.ImageCompanies.Where(x => x.CompanyId == item.Company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
                 if (image != null)
                 {
-
                     var model = new CompanyExposeVM
                     {
-                        Id = company.Id,
-                        Name = company.Name,
-                        Description = company.Description,
-                        PhoneNumber = company.PhoneNumber,
-                        City = company.City,
-                        StreetNameAndNumber = company.StreetNameAndNumber,
-                        OpeningHours = company.OpeningHours,
-                        ClosingHours = company.ClosingHours,
-                        CompanyTypeName = company.CompanyType.Name,
+                        Id = item.Company.Id,
+                        Name = item.Company.Name,
+                        Description = item.Company.Description,
+                        PhoneNumber = item.Company.PhoneNumber,
+                        City = item.Company.City,
+                        StreetNameAndNumber = item.Company.StreetNameAndNumber,
+                        OpeningHours = item.Company.OpeningHours,
+                        ClosingHours = item.Company.ClosingHours,
+                        CompanyTypeName = item.Company.CompanyType.Name,
                         ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title }
                     };
-
                     modelList.Add(model);
                 }
             }
@@ -123,11 +118,8 @@ namespace FeaturedServices.Application.Repositories
             var company = context.Companies.Include(x => x.CompanyType).Where(x => x.ClientId == user.Id).FirstOrDefault();
             if (company == null) return null;
 
-            var test = context.Workers.Include(x => x.Workers_Services.Where(x => x.))
-
-            if (false) return null;
-
-
+            var servicesAssignment = context.Workers.Where(x => x.CompanyId == company.Id).Where(x => x.TotalServices > 0).Any();
+            if (servicesAssignment == false) return null;
 
             var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
 
@@ -144,7 +136,7 @@ namespace FeaturedServices.Application.Repositories
                     OpeningHours = company.OpeningHours,
                     ClosingHours = company.ClosingHours,
                     CompanyTypeName = company.CompanyType.Name,
-                    ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title }
+                    ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title },
                 };
                 return model;
             }

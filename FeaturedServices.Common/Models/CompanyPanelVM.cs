@@ -9,7 +9,7 @@ namespace FeaturedServices.Common.Models
     public class CompanyPanelVM
     {
         public CompanyVM companyVM { get; set; }
-        public List<WorkerVM> workerVM { get; set; }
+        public List<WorkerServicesNbVM> workerVMs { get; set; }
         public ImageCompanyVM imageCompanyVM { get; set; }
         public bool HaveImage { get; set; }
     }

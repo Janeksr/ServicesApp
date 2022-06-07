@@ -15,8 +15,6 @@ namespace FeaturedServices.Application.Contracts
         Task<bool> UpdateCompany(int id, CompanyVM company);
         Task<Company> CheckCompanyEdit();
         Task<int> GetCompanyId();
-        Task AddTotalServices(Worker worker);
-        Task RemoveTotalServices(Worker worker);
         Task<IQueryable<CompanyExposeVM>> GetAllCompanies();
         Task<CompanyExposeVM> GetCompany();
         Task<CompanyExposeVM> GetCompanyForUser(int id);

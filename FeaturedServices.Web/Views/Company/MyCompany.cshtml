@@ -79,17 +79,21 @@
                     <th>
                         Name
                     </th>
+                    <th>Number Of Services</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.workerVM)
+                @foreach (var item in Model.workerVMs)
                 {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Firstname)
                             @Html.DisplayFor(modelItem => item.Lastname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalServices)
                         </td>
                         <td>
                             <a class="btn btn-info btn-sm ms-3" asp-controller="WorkerService" asp-action="Assignment" asp-route-id="@item.Id">Assign Services</a>
