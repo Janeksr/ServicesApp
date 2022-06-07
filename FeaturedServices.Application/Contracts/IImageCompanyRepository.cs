@@ -11,7 +11,7 @@ namespace FeaturedServices.Application.Contracts
     public interface IImageCompanyRepository : IGenericRepository<ImageCompany>
     {
         Task<bool> AddImage(ImageCompanyVM imageCompanyVM);
-        Task<bool> CheckIfCompanyHaveMainImage(Company company);
+        Task<bool> CheckIfCompanyHaveMainImage(int companyId);
         Task DeleteImage(ImageCompany image);
         Task<bool> HaveImage();
     }

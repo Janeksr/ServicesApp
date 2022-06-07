@@ -4,7 +4,7 @@
 		<TargetFramework>net6.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<UserSecretsId>aspnet-FeaturedServices.Web-64B457E5-BE43-42A5-A13E-FF93C844C2FF</UserSecretsId>
+		<UserSecretsId>FeaturedServices</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>

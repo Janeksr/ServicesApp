@@ -24,10 +24,7 @@
                 <div class="row">
                     <div class="d-flex border-top pt-3 pb-3">
                         Employees:
-                        @foreach (var worker in @Model.WorkerServiceVMs)
-                        {
-                            <span class="mx-3">@worker.Firstname @worker.Lastname</span>
-                        }
+                        
                     </div>
                 </div>
                 <div class="row">
@@ -53,7 +50,7 @@
         <p class="fs-3">Services</p>
         <ul class="list-group list-group-flush">
 
-            @foreach (var item in Model.WorkerServiceVMs)
+            @foreach (var item in Model.ListOfServicesVMs)
             {
                 <li class="list-group-item">
                     <div class="row d-flex align-content-between mb-3">

@@ -15,11 +15,9 @@ namespace FeaturedServices.Web.Controllers
         {
             this.serviceRepository = serviceRepository;
         }
-        public IActionResult AddService(int id)
+        public IActionResult AddService()
         {
-            if (id == 0) return NotFound();
-            var model = new ServiceVM { WorkerId = id };
-            return View(model);
+            return View();
         }
 
         [HttpPost]
@@ -38,7 +36,7 @@ namespace FeaturedServices.Web.Controllers
             {
 
             }
-            return View();
+            return View(serviceVM);
         }
 
         public async Task<IActionResult> ListOfServices()
@@ -49,9 +47,9 @@ namespace FeaturedServices.Web.Controllers
 
         public async Task<IActionResult> DeleteService(int id)
         {
-            if (id == null) return NotFound();
-            await serviceRepository.DeleteService(id);
-            return RedirectToAction("ListOfServices", "Service");
+            if(await serviceRepository.DeleteService(id))
+                return RedirectToAction("ListOfServices", "Service");
+            return NotFound();
         }
 
         public async Task<IActionResult> EditService(int id)
@@ -70,12 +68,15 @@ namespace FeaturedServices.Web.Controllers
                 if (ModelState.IsValid)
                 {
                     if (await serviceRepository.UpdateService(serviceEditVM))
+                    {
                         return RedirectToAction("ListOfServices", "Service");
+                    }
+                    return NotFound();
                 }
             }
             catch (Exception ex)
             {
-
+                ModelState.AddModelError(string.Empty, "En error.");
             }
             return View(serviceEditVM);
         }

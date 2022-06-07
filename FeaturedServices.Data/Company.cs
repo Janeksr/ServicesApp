@@ -13,7 +13,6 @@ namespace FeaturedServices.Data
         public string Description { get; set; }
         public DateTime OpeningHours { get; set; }
         public DateTime ClosingHours { get; set; }
-        public int TotalServices { get; set; } = 0;
 
         [ForeignKey("CompanyTypeId")]
         public CompanyType CompanyType { get; set; }
