@@ -5,6 +5,7 @@ using FeaturedServices.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,15 +19,18 @@ namespace FeaturedServices.Web.Controllers
         private readonly ICompanyTypeRepository companyTypeRepository;
         private readonly IRoleRepository roleRepository;
         private readonly IWorkerRepository workerRepository;
+        private readonly IServiceRepository serviceRepository;
 
         public CompanyController(ApplicationDbContext context, ICompanyRepository companyRepository,
-            ICompanyTypeRepository companyTypeRepository, IRoleRepository roleRepository, IWorkerRepository workerRepository)
+            ICompanyTypeRepository companyTypeRepository, IRoleRepository roleRepository, IWorkerRepository workerRepository,
+            IServiceRepository serviceRepository)
         {
             this.context = context;
             this.companyRepository = companyRepository;
             this.companyTypeRepository = companyTypeRepository;
             this.roleRepository = roleRepository;
             this.workerRepository = workerRepository;
+            this.serviceRepository = serviceRepository;
         }
 
         [Authorize(Roles = Roles.Company)]
@@ -63,10 +67,16 @@ namespace FeaturedServices.Web.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> MyCompany()
+        public async Task<IActionResult> MyCompany(string? error, string? errorMsg)
         {
             var company = await companyRepository.GetCompanyDetails();
-            var model = new CompanyWithWorkerVM {companyVM = company, workerVM = await workerRepository.GetWorkers()};
+            var haveImage = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).AnyAsync(x => x.MainImage == true);
+            var workerServicesNbVMs = await workerRepository.GetWorkers();
+
+            var model = new CompanyPanelVM { companyVM = company, workerVMs = workerServicesNbVMs, HaveImage = haveImage };
+            
+            if(error != null && errorMsg != null) ModelState.AddModelError(error, errorMsg);
+
             return View(model);
         }
 
@@ -105,6 +115,20 @@ namespace FeaturedServices.Web.Controllers
         public async Task<IActionResult> PreviewCompany()
         {
             var model = await companyRepository.GetCompany();
+            if (model == null)
+            {
+                ModelState.AddModelError("CustomError", "Please check if You have added image and any service to your company.");
+                return View(model);
+            }
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        [Route("{controller}/{action}/{id}")]
+        public async Task<IActionResult> ViewCompany(int id)
+        {
+            var model = await companyRepository.GetCompanyForUser(id);
+            if (model == null) return NotFound();
             return View(model);
         }
 

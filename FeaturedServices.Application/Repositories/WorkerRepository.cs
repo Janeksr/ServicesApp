@@ -29,35 +29,36 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task AddWorkerToCompany(WorkerVM workerVM)
         {
-            var company = await companyRepository.CheckCompanyEdit();
+            var companyId = await companyRepository.GetCompanyId();
             var worker = mapper.Map<Worker>(workerVM);
 
             var key = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") + worker.Lastname;
 
 
             worker.Key = RandomWorker.ComputeMd5Hash(key);
-            worker.CompanyId = company.Id;
-            context.Entry(company).State = EntityState.Detached;
+            worker.CompanyId = companyId;
+            //context.Entry(companyId).State = EntityState.Detached;
             await AddAsync(worker);
         }
 
-        public async Task<List<WorkerVM>> GetWorkers()
+        public async Task<List<WorkerServicesNbVM>> GetWorkers()
         {
-            var company = await companyRepository.CheckCompanyEdit();
-            var workers = await context.Workers.Where(x => x.CompanyId == company.Id).ToListAsync();
-            var workerVM = mapper.Map<List<WorkerVM>>(workers);
-            return workerVM;
+            var companyId = await companyRepository.GetCompanyId();
+            var workers = await context.Workers.Where(x => x.CompanyId == companyId).ToListAsync();
+            
+            var workerServicesNbVM = mapper.Map<List<WorkerServicesNbVM>>(workers);
+            return workerServicesNbVM;
         }
 
         public async Task<Worker> GetWorker(int id)
         {
-            var company = await companyRepository.CheckCompanyEdit();
+            var companyId = await companyRepository.GetCompanyId();
             var worker = await context.Workers.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (worker == null)
             {
                 return null;
             }
-            else if (worker.CompanyId != company.Id)
+            else if (worker.CompanyId != companyId)
             {
                 return null;
             }
@@ -74,6 +75,29 @@ namespace FeaturedServices.Application.Repositories
             return true;
         }
 
-        
+        public async Task DeleteWorker(int id)
+        {
+            var worker = await GetWorker(id);
+            if(worker == null)
+            {
+                return;
+            }
+            await DeleteAsync(id);
+        }
+
+        public async Task<bool> CheckWorkerId(int id)
+        {
+            var companyId = await companyRepository.GetCompanyId();
+            var workerCompanyId = await context.Workers.Where(x => x.Id == id).Select(x => x.CompanyId).FirstOrDefaultAsync();
+            if (workerCompanyId == 0)
+            {
+                return false;
+            }
+            else if (workerCompanyId != companyId)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

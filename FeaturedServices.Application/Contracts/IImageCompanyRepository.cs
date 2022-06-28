@@ -10,6 +10,9 @@ namespace FeaturedServices.Application.Contracts
 {
     public interface IImageCompanyRepository : IGenericRepository<ImageCompany>
     {
-        Task AddImage(ImageCompanyVM imageCompanyVM);
+        Task<bool> AddImage(ImageCompanyVM imageCompanyVM);
+        Task<bool> CheckIfCompanyHaveMainImage(int companyId);
+        Task DeleteImage(ImageCompany image);
+        Task<bool> HaveImage();
     }
 }

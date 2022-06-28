@@ -1,38 +1,15 @@
-﻿@model CompanyExposeVM
+﻿@model CompanyExposeVM?
 
-<div class="row mb-5">
-        <div class=col-6>
+@if (Model != null)
+{
+    <div class="row mb-5">
+        <div class="col-6">
             <div id="carouselExampleControls" class="carousel slide" data-bs-interval="false" data-bs-ride="carousel">
                 <div class="carousel-inner">
-                    @{
-                        bool first = true;
-                        foreach (var image in Model.ImageCompanyExposeVMs)
-                        {
-                            if (first)
-                            {
-                                <div class="carousel-item active">
-                                    <img src="~/image/@image.ImageName" class="d-block w-100" alt="@image.Title">
-                                </div>
-                                first = false;
-                            }
-                            else
-                            {
-                                <div class="carousel-item">
-                                    <img src="~/image/@image.ImageName" class="d-block w-100" alt="@image.Title">
-                                </div>
-                            }
-
-                        }
-                    }
+                    <div class="carousel-item active">
+                        <img src="~/image/@Model.ImageCompanyExposeVM.ImageName" class="d-block w-100" alt="@Model.ImageCompanyExposeVM.Title">
+                    </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
 
         </div>
@@ -49,6 +26,16 @@
                     <p><span class="fw-bolder">Category: </span>@Model.CompanyTypeName</p>
                     <p><span class="fw-bolder">Open Hours: </span>@Model.OpeningHours.ToShortTimeString() - @Model.ClosingHours.ToShortTimeString()</p>
                 </div>
+                <a type="button" class="btn btn-success">Make an Appointment</a>
             </div>
         </div>
     </div>
+}
+else
+{
+    @Html.ValidationMessage("CustomError")
+
+}
+<div>
+    <a asp-controller="Company" asp-action="MyCompany">Back to List</a>
+</div>

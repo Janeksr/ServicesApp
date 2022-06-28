@@ -17,6 +17,7 @@ namespace FeaturedServices.Common.Models
         public DateTime OpeningHours { get; set; }
         public DateTime ClosingHours { get; set; }
         public string CompanyTypeName { get; set; }
-        public List<ImageCompanyExposeVM> ImageCompanyExposeVMs { get; set; }
+        public ImageCompanyExposeVM ImageCompanyExposeVM { get; set; }
+        public List<ListOfServicesVM> ListOfServicesVMs { get; set; }
     }
 }

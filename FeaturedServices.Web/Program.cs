@@ -37,6 +37,7 @@ builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IImageCompanyRepository, ImageCompanyRepository>();
+builder.Services.AddScoped<IWorkersServicesRepository, WorkersServicesRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 

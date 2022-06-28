@@ -17,6 +17,7 @@ namespace FeaturedServices.Data
         [ForeignKey("CompanyId")]
         public Company Company { get; set; }
         public int CompanyId { get; set; }
+        public bool MainImage { get; set; } 
 
         [NotMapped]
         public IFormFile ImageFile { get; set; }

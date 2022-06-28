@@ -1,0 +1,24 @@
+﻿@model AssignWorkerWithServicesVM
+
+<form method="post" asp-controller="WorkerService" asp-action="Assignment">
+    <p>Assign Services For @Model.Firstname @Model.Lastname</p>
+    @foreach (var service in Model.ServicesList)
+    {
+        @if (service.Selected)
+        {
+            <input id="@service.Value" type="checkbox" name="selectedServices" value="@service.Value" checked/>
+            <label for="@service.Value">@service.Text</label>
+            <br />
+        }
+        else
+        {
+            <input id="@service.Value" type="checkbox" name="selectedServices" value="@service.Value" />
+            <label for="@service.Value">@service.Text</label>
+            <br />
+        }
+
+    }
+    <br />
+    <input type="hidden" asp-for="WorkerId" />
+    <input type="submit" value="Submit" />
+</form>

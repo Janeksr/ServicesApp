@@ -28,62 +28,81 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<bool> AddService(ServiceVM serviceVM)
         {
-            var worker = await workerRepository.GetWorker(serviceVM.WorkerId);
-            if (worker == null) return false;
+            var companyId = await companyRepository.GetCompanyId();
             var service = mapper.Map<Service>(serviceVM);
-            context.Entry(worker).State = EntityState.Detached;
+            service.CompanyId = companyId;
             await UpdateAsync(service);
-            await companyRepository.AddTotalServices(worker);
             return true;
         }
 
         public async Task<bool> DeleteService(int id)
         {
             var service = await GetAsync(id);
-            var worker = await workerRepository.GetWorker(service.WorkerId);
-            if(worker == null) return false;
+            var companyId = await companyRepository.GetCompanyId();
+            if(companyId != service.CompanyId) return false;
             await DeleteAsync(id);
-            await companyRepository.RemoveTotalServices(worker);
             return true;
         }
 
         public async Task<ServiceEditVM> GetService(int id)
         {
             var service = await GetAsync(id);
-            var worker = await workerRepository.GetWorker(service.WorkerId);
-            if (worker == null) return null;
+            var companyId = await companyRepository.GetCompanyId();
+            if (companyId != service.CompanyId) return null;
             return mapper.Map<ServiceEditVM>(service);
         }
 
-        public async Task<List<WorkerServiceVM>> GetWorkersWithServices()
+        public async Task<List<ListOfServicesVM>> GetWorkersWithServices()
         {
-            var company = await companyRepository.CheckCompanyEdit();
-            var model = await context.Services.Include(x => x.Worker).Where(x => x.Worker.CompanyId == company.Id).ToListAsync();
-            var workerServicesList = new List<WorkerServiceVM>();
+            var companyId = await companyRepository.GetCompanyId();
+
+            var model = await context.Services
+                .Where(x => x.CompanyId == companyId)
+                .ToListAsync();
+
+            var servicesList = new List<ListOfServicesVM>();
             foreach (var service in model)
             {
-                var workerServices = new WorkerServiceVM
+                var services = new ListOfServicesVM
                 {
                     Id = service.Id,
-                    Firstname = service.Worker.Firstname,
-                    Lastname = service.Worker.Lastname,
                     Name = service.Name,
                     Description = service.Description,
-                    Duration = service.Duration,
-                    WorkerId = service.WorkerId
+                    Value = service.Value,
+                    Duration = service.Duration
                 };
-                workerServicesList.Add(workerServices);
+                servicesList.Add(services);
             }
-            return workerServicesList;
+            return servicesList;
         }
 
         public async Task<bool> UpdateService(ServiceEditVM serviceEditVM)
         {
-            var worker = await workerRepository.GetWorker(serviceEditVM.WorkerId);
-            if(worker == null) return false;
             var service = mapper.Map<Service>(serviceEditVM);
+            var companyId = await companyRepository.GetCompanyId();
+            service.CompanyId = companyId;
             await UpdateAsync(service);
             return true;
+        }
+
+        public async Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id)
+        {
+            var model = await context.Services.Where(x => x.CompanyId == id).ToListAsync();
+
+            var servicesList = new List<ListOfServicesVM>();
+            foreach (var service in model)
+            {
+                var services = new ListOfServicesVM
+                {
+                    Id = service.Id,
+                    Name = service.Name,
+                    Description = service.Description,
+                    Value = service.Value,
+                    Duration = service.Duration
+                };
+                servicesList.Add(services);
+            }
+            return servicesList;
         }
     }
 }
