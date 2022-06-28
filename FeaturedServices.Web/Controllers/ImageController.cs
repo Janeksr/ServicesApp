@@ -11,13 +11,11 @@ namespace FeaturedServices.Web.Controllers
     [Authorize(Roles = Roles.CompanyCreated)]
     public class ImageController : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly IImageCompanyRepository imageCompanyRepository;
         private readonly ICompanyRepository companyRepository;
 
-        public ImageController(ApplicationDbContext context, IImageCompanyRepository imageCompanyRepository, ICompanyRepository companyRepository)
+        public ImageController(IImageCompanyRepository imageCompanyRepository, ICompanyRepository companyRepository)
         {
-            this.context = context;
             this.imageCompanyRepository = imageCompanyRepository;
             this.companyRepository = companyRepository;
         }
@@ -49,7 +47,7 @@ namespace FeaturedServices.Web.Controllers
         public async Task<IActionResult> DeleteMainImage()
         {
             var companyId = await companyRepository.GetCompanyId();
-            var image = context.ImageCompanies.Where(x => x.CompanyId == companyId).Where(x => x.MainImage == true).FirstOrDefault();
+            var image = await imageCompanyRepository.GetImageCompany(companyId);
             if (image != null)
             {
                 await imageCompanyRepository.DeleteImage(image);

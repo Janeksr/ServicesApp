@@ -4,6 +4,7 @@ using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,17 +17,13 @@ namespace FeaturedServices.Application.Repositories
     {
         private readonly ApplicationDbContext context;
         private readonly IMapper mapper;
-        private readonly UserManager<Client> userManager;
-        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public CompanyTypeRepository(ApplicationDbContext context, IMapper mapper,
-            UserManager<Client> userManager, IHttpContextAccessor httpContextAccessor
+        public CompanyTypeRepository(ApplicationDbContext context, 
+            IMapper mapper
             ) : base(context)
         {
             this.context = context;
             this.mapper = mapper;
-            this.userManager = userManager;
-            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<CompanyTypeVM> GetCompanyType(int id)
@@ -35,6 +32,11 @@ namespace FeaturedServices.Application.Repositories
             var companyTypeVM = mapper.Map<CompanyTypeVM>(model);
             return companyTypeVM;
         }
-        
+
+        public async Task<SelectList> GetSelectListCompaniesTypes()
+        {
+            var list = new SelectList(context.CompanyTypes, "Id", "Name");
+            return list;
+        }
     }
 }

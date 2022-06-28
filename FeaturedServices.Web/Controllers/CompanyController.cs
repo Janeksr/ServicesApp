@@ -4,6 +4,7 @@ using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,31 +15,38 @@ namespace FeaturedServices.Web.Controllers
     [Authorize(Roles = Roles.Company + ", " + Roles.CompanyCreated)]
     public class CompanyController : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly ICompanyRepository companyRepository;
         private readonly ICompanyTypeRepository companyTypeRepository;
         private readonly IRoleRepository roleRepository;
         private readonly IWorkerRepository workerRepository;
         private readonly IServiceRepository serviceRepository;
+        private readonly IImageCompanyRepository imageCompanyRepository;
+        private readonly SignInManager<Client> signInManager;
 
-        public CompanyController(ApplicationDbContext context, ICompanyRepository companyRepository,
-            ICompanyTypeRepository companyTypeRepository, IRoleRepository roleRepository, IWorkerRepository workerRepository,
-            IServiceRepository serviceRepository)
+        public CompanyController( 
+            ICompanyRepository companyRepository,
+            ICompanyTypeRepository companyTypeRepository, 
+            IRoleRepository roleRepository, 
+            IWorkerRepository workerRepository,
+            IServiceRepository serviceRepository, 
+            IImageCompanyRepository imageCompanyRepository,
+            SignInManager<Client> signInManager)
         {
-            this.context = context;
             this.companyRepository = companyRepository;
             this.companyTypeRepository = companyTypeRepository;
             this.roleRepository = roleRepository;
             this.workerRepository = workerRepository;
             this.serviceRepository = serviceRepository;
+            this.imageCompanyRepository = imageCompanyRepository;
+            this.signInManager = signInManager;
         }
 
         [Authorize(Roles = Roles.Company)]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             var model = new CompanyVM
             {
-                CompanyTypes = new SelectList(context.CompanyTypes, "Id", "Name")
+                CompanyTypes = await companyTypeRepository.GetSelectListCompaniesTypes()
             };
             return View(model);
         }
@@ -56,7 +64,8 @@ namespace FeaturedServices.Web.Controllers
 
                         model.CompanyType = await companyTypeRepository.GetCompanyType(model.CompanyTypeId);
                         await roleRepository.ChangeUserRole(Roles.CompanyCreated);
-                        return View(nameof(MyCompany));
+                        await signInManager.SignOutAsync();
+                        return RedirectToAction("CompanyCreated", "Home");
                     }
                 }
             }
@@ -70,7 +79,7 @@ namespace FeaturedServices.Web.Controllers
         public async Task<IActionResult> MyCompany(string? error, string? errorMsg)
         {
             var company = await companyRepository.GetCompanyDetails();
-            var haveImage = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).AnyAsync(x => x.MainImage == true);
+            var haveImage = await imageCompanyRepository.HaveImage(company.Id);
             var workerServicesNbVMs = await workerRepository.GetWorkers();
 
             var model = new CompanyPanelVM { companyVM = company, workerVMs = workerServicesNbVMs, HaveImage = haveImage };
@@ -84,7 +93,7 @@ namespace FeaturedServices.Web.Controllers
         {
             var model = await companyRepository.GetCompanyDetails();
             if (model == null) return NotFound();
-            model.CompanyTypes = new SelectList(context.CompanyTypes, "Id", "Name");
+            model.CompanyTypes = await companyTypeRepository.GetSelectListCompaniesTypes();
             return View(model);
         }
 
@@ -108,7 +117,7 @@ namespace FeaturedServices.Web.Controllers
                 ModelState.AddModelError(string.Empty, "En error has occurred.");
             }
             ModelState.AddModelError(string.Empty, "En error has occurred.");
-            companyVM.CompanyTypes = new SelectList(context.CompanyTypes, "Id", "Name");
+            companyVM.CompanyTypes = await companyTypeRepository.GetSelectListCompaniesTypes();
             return View("Edit", companyVM);
         }
 

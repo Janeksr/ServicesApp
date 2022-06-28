@@ -11,13 +11,11 @@ namespace FeaturedServices.Web.Controllers
     [Authorize(Roles = Roles.CompanyCreated)]
     public class WorkerServiceController : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly IWorkersServicesRepository workersServicesRepository;
         private readonly IWorkerRepository workerRepository;
 
-        public WorkerServiceController(ApplicationDbContext context, IWorkersServicesRepository workersServicesRepository, IWorkerRepository workerRepository)
+        public WorkerServiceController(IWorkersServicesRepository workersServicesRepository, IWorkerRepository workerRepository)
         {
-            this.context = context;
             this.workersServicesRepository = workersServicesRepository;
             this.workerRepository = workerRepository;
         }

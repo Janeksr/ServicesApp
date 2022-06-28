@@ -79,11 +79,11 @@ namespace FeaturedServices.Application.Repositories
                 .Select(x => new
                 {
                     x.Company,
-                    x.TotalServices,
+                    //x.TotalServices,
                     x.Company.CompanyType.Name
                 })
-                .Where(x => x.TotalServices > 0)
                 .Distinct()
+                //.Where(x => x.TotalServices > 0)
                 .ToListAsync();
 
             var modelList = new List<CompanyExposeVM>();

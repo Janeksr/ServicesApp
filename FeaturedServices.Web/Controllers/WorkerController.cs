@@ -80,13 +80,6 @@ namespace FeaturedServices.Web.Controllers
 
         public async Task<IActionResult> DeleteWorker(int id)
         {
-            var test = context.Workers_Services.Where(x => x.WorkerId == id).ToList();
-            foreach (var item in test)
-            {
-                context.Remove(item);
-            }
-            context.SaveChanges();
-
             await workerRepository.DeleteWorker(id);
             return RedirectToAction("MyCompany", "Company");
         }

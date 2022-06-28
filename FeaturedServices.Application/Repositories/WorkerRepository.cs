@@ -77,6 +77,13 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task DeleteWorker(int id)
         {
+            var workerServices = context.Workers_Services.Where(x => x.WorkerId == id).ToList();
+            foreach (var item in workerServices)
+            {
+                context.Remove(item);
+            }
+            context.SaveChanges();
+
             var worker = await GetWorker(id);
             if(worker == null)
             {

@@ -86,7 +86,7 @@ namespace FeaturedServices.Web.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!await CompanyTypeExists(companyTypeVM.Id))
+                    if (!await companyTypeRepository.Exists(companyTypeVM.Id))
                     {
                         return NotFound();
                     }
@@ -107,11 +107,6 @@ namespace FeaturedServices.Web.Controllers
         {
             await companyTypeRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> CompanyTypeExists(int id)
-        {
-            return await companyTypeRepository.Exists(id);
         }
     }
 }

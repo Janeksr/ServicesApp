@@ -70,7 +70,6 @@
                         </div>
                     </div>
                 </li>
-                @*<p>@item.Name, @item.Duration.ToShortTimeString(), @item.Description, @item.Value</p>*@
             }
 
 
@@ -78,70 +77,35 @@
     </div>
 </div>
 
-@*<div class="row">
-    <div class="col-5">
-        <div id="carouselExampleControls" class="carousel slide bg-light" data-bs-ride="carousel">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card" style="width: 18rem;">
-                                <div class="card-body">
-                                    <h5 class="card-title">Card title</h5>
-                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon bg-dark" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-                <span class="carousel-control-next-icon bg-dark" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
-        </div>
-    </div>
-</div>*@
 
 
+<div id="calendar"></div>
 
 @section Scripts{
+
+<script>
+const date = new Date();
+const maxDate = date.setMonth(date.getMonth() + 2);
+const startH = '@Model.OpeningHours.ToShortTimeString()';
+const endH = '@Model.ClosingHours.AddHours(-1).ToShortTimeString()';
+console.log(startH)
+
+
+ mobiscroll.datepicker('#calendar', {
+     controls: ['time'],
+    timeFormat: 'HH:mm',
+    controls: ['calendar', 'timegrid'],
+    min: Date.now(),
+    max: maxDate,
+    minTime: startH,
+    maxTime: endH,
+    stepMinute: 30,
+    display: 'inline'
+});
+
+</script>
+
+
 <script>
             // Initialize and add the map
     function initMap() {

@@ -42,7 +42,7 @@ namespace FeaturedServices.Application.Repositories
 
             var companyId = await companyRepository.GetCompanyId();
 
-            if (await CheckIfCompanyHaveMainImage(companyId))
+            if (await CompanyHaveMainImage(companyId))
             {
                 imageCompany.MainImage = true;
                 imageCompany.ImageName = fileName + date + extension;
@@ -68,7 +68,7 @@ namespace FeaturedServices.Application.Repositories
             return false;
         }
 
-        public async Task<bool> CheckIfCompanyHaveMainImage(int companyId)
+        public async Task<bool> CompanyHaveMainImage(int companyId)
         {
             var images = await context.ImageCompanies.Where(x => x.CompanyId == companyId).Where(x => x.MainImage == true).AnyAsync();
             if (images == true) return false;
@@ -83,9 +83,14 @@ namespace FeaturedServices.Application.Repositories
             File.Delete(wwwRootPath + "/Image/" + image.ImageName);
         }
 
-        public Task<bool> HaveImage()
+        public async Task<ImageCompany> GetImageCompany(int companyId)
         {
-            return Task.FromResult(true);
+            return context.ImageCompanies.Where(x => x.CompanyId == companyId).Where(x => x.MainImage == true).FirstOrDefault();
+        }
+
+        public Task<bool> HaveImage(int id)
+        {
+            return context.ImageCompanies.Where(x => x.CompanyId == id).AnyAsync(x => x.MainImage == true);
         }
     }
 }

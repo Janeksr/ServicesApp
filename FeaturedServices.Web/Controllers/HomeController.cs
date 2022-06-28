@@ -11,13 +11,11 @@ namespace FeaturedServices.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext context;
         private readonly ILogger<HomeController> _logger;
         private readonly ICompanyRepository companyRepository;
 
-        public HomeController(ApplicationDbContext context, ILogger<HomeController> logger, ICompanyRepository companyRepository)
+        public HomeController(ILogger<HomeController> logger, ICompanyRepository companyRepository)
         {
-            this.context = context;
             _logger = logger;
             this.companyRepository = companyRepository;
         }
@@ -55,6 +53,11 @@ namespace FeaturedServices.Web.Controllers
                 }
             }
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult CompanyCreated()
+        {
+            return View();
         }
     }
 }
