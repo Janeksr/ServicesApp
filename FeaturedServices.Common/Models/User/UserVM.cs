@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace FeaturedServices.Common.Models
+namespace FeaturedServices.Common.Models.User
 {
     public class UserVM
     {

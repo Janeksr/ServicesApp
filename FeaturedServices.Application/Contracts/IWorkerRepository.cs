@@ -1,4 +1,5 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Common.Models.Worker;
+using FeaturedServices.Common.Models.WorkerServices;
 using FeaturedServices.Data;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace FeaturedServices.Application.Contracts
     {
         Task AddWorkerToCompany(WorkerVM workerVM);
         Task<List<WorkerServicesNbVM>> GetWorkers();
+        Task<List<WorkerVM>> GetWorkers(int id);
         Task<Worker> GetWorker(int id);
         Task<bool> CheckWorkerId(int id);
         Task<bool> UpdateWorker(WorkerVM workerVM);

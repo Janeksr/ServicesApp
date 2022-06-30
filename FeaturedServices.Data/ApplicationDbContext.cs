@@ -38,6 +38,6 @@ namespace FeaturedServices.Data
         public DbSet<Service> Services { get; set; }
         public DbSet<Worker_Service> Workers_Services { get; set; }
         public DbSet<ImageCompany> ImageCompanies { get; set; }
-        //public DbSet<ImageCompany> ImageCompanies { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
     }
 }

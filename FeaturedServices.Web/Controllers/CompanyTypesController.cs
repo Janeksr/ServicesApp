@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using FeaturedServices.Data;
 using FeaturedServices.Application.Contracts;
 using AutoMapper;
-using FeaturedServices.Common.Models;
 using Microsoft.AspNetCore.Authorization;
 using FeaturedServices.Common.Constants;
+using FeaturedServices.Common.Models.CompanyType;
 
 namespace FeaturedServices.Web.Controllers
 {

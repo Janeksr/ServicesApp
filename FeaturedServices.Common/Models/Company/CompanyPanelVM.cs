@@ -1,10 +1,12 @@
-﻿using System;
+﻿using FeaturedServices.Common.Models.Image;
+using FeaturedServices.Common.Models.WorkerServices;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeaturedServices.Common.Models
+namespace FeaturedServices.Common.Models.Company
 {
     public class CompanyPanelVM
     {

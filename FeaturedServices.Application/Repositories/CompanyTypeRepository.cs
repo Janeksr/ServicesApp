@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FeaturedServices.Application.Contracts;
-using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.CompanyType;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;

@@ -1,4 +1,4 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Common.Models.User;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Identity;
 using System;
