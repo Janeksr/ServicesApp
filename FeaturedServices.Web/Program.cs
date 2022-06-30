@@ -39,12 +39,21 @@ builder.Services.AddScoped<IWorkerRepository, WorkerRepository>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IImageCompanyRepository, ImageCompanyRepository>();
 builder.Services.AddScoped<IWorkersServicesRepository, WorkersServicesRepository>();
+builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 
 builder.Services.AddAutoMapper(typeof(MapperConfig));
 
 builder.Host.UseSerilog((ctx, lc) =>
     lc.WriteTo.Console()
     .ReadFrom.Configuration(ctx.Configuration));
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowaAll",
+        b => b.AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod());
+});
 
 builder.Services.AddControllersWithViews();
 

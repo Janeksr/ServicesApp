@@ -18,20 +18,20 @@ var instance = mobiscroll.datepicker('#demo-mobile-picker-button', {
     showOnFocus: false,
 });
 
-instance.setVal(new Date(), true);
+//instance.setVal(new Date(), true);
 
-mobiscroll.datepicker('#demo-mobile-picker-mobiscroll', {
-    controls: ['calendar']
-});
+//mobiscroll.datepicker('#demo-mobile-picker-mobiscroll', {
+//    controls: ['calendar']
+//});
 
-mobiscroll.datepicker('#demo-mobile-picker-inline', {
-    controls: ['calendar'],
-    display: 'inline'
-});
+//mobiscroll.datepicker('#demo-mobile-picker-inline', {
+//    controls: ['calendar'],
+//    display: 'inline'
+//});
 
-document
-    .getElementById('show-mobile-date-picker')
-    .addEventListener('click', function () {
-        instance.open();
-        return false;
-    });
+//document
+//    .getElementById('show-mobile-date-picker')
+//    .addEventListener('click', function () {
+//        instance.open();
+//        return false;
+//    });

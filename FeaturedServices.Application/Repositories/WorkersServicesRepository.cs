@@ -1,5 +1,5 @@
 ﻿using FeaturedServices.Application.Contracts;
-using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.WorkerServices;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -15,19 +15,16 @@ namespace FeaturedServices.Application.Repositories
     {
         private readonly ApplicationDbContext context;
         private readonly IWorkerRepository workerRepository;
-        private readonly ICompanyRepository companyRepository;
 
-        public WorkersServicesRepository(ApplicationDbContext context, IWorkerRepository workerRepository, ICompanyRepository companyRepository) : base(context)
+        public WorkersServicesRepository(ApplicationDbContext context, IWorkerRepository workerRepository) : base(context)
         {
             this.context = context;
             this.workerRepository = workerRepository;
-            this.companyRepository = companyRepository;
         }
 
-        public async Task<List<SelectListItem>> PopulateSevices(int id)
+        public async Task<List<SelectListItem>> PopulateSevices(int id, int companyId)
         {
             List<SelectListItem> servicesList = new List<SelectListItem>();
-            var companyId = await companyRepository.GetCompanyId();
             var services = context.Services.Where(x => x.CompanyId == companyId).Select(x => new { x.Name, x.Id }).ToList();
             var selectedServicesInDb = context.Workers_Services.Where(x => x.WorkerId == id).ToList();
             foreach (var service in services)

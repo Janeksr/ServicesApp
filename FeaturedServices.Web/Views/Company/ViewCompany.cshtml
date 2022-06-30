@@ -1,5 +1,7 @@
-﻿@model CompanyExposeVM
-
+﻿@model CompanyClientVM
+@{
+    int round = 0;
+}
 <style>
     #map {
         height: 200px;
@@ -24,7 +26,10 @@
                 <div class="row">
                     <div class="d-flex border-top pt-3 pb-3">
                         Employees:
-                        
+                        @foreach (var worker in Model.WorkersVMs)
+                        {
+                            <span>&nbsp;@worker.Firstname @worker.Lastname &nbsp;</span>
+                        }
                     </div>
                 </div>
                 <div class="row">
@@ -52,6 +57,12 @@
 
             @foreach (var item in Model.ListOfServicesVMs)
             {
+                round++;
+                string target = "staticBackdrop";
+                string btnCallendar = "callendarView";
+                target += round;
+                btnCallendar += round;
+
                 <li class="list-group-item">
                     <div class="row d-flex align-content-between mb-3">
                         <div class="col-9">
@@ -64,7 +75,7 @@
                                     @item.Duration.ToShortTimeString()h
                                 </div>
                                 <div class="col-6">
-                                    <a class="btn btn-outline-success btn-sm">Make an Appointment</a>
+                                    <button id="@item.Id" class="btn btn-outline-success btn-sm callendarView @btnCallendar" data-bs-toggle="modal" data-bs-target="#@target">Make an Appointment</button>
                                 </div>
                             </div>
                         </div>
@@ -79,52 +90,133 @@
 
 
 
-<div id="calendar"></div>
+<div class="modal-area">
+    @await Html.PartialAsync("_CallendarModal", Model)
+</div>
+
+
+
+
 
 @section Scripts{
+    <script>
 
-<script>
-const date = new Date();
-const maxDate = date.setMonth(date.getMonth() + 2);
-const startH = '@Model.OpeningHours.ToShortTimeString()';
-const endH = '@Model.ClosingHours.AddHours(-1).ToShortTimeString()';
-console.log(startH)
+        const date = new Date();
+        const maxDate = date.setMonth(date.getMonth() + 2);
+        const startH = '@Model.OpeningHours.ToShortTimeString()';
+        const endH = '@Model.ClosingHours.AddHours(-1).ToShortTimeString()';
+        const companyId = @Model.Id;
+        const partialUrl = 'https://localhost:7030/api/reservations/';
+        const noServiceUrl = partialUrl + companyId.toString();
+
+        let workerId;
+
+        const appointmentBtn = document.querySelectorAll('.callendarView');
+        let currentServiceBtn;
+
+        let invalidDateArray = new Array();
+        let invalidDate;
+        let additionalDate;
+
+        let datepickerSample = {
+            controls: ['time'],
+            timeFormat: 'HH:mm',
+            controls: ['calendar', 'timegrid'],
+            min: Date.now(),
+            max: maxDate,
+            minTime: startH,
+            maxTime: endH,
+            stepMinute: 30,
+            display: 'inline',
+            invalid: invalidDateArray
+            //invalid: [{
+            //    start: '2022-07-01T09:00',
+            //    end: '2022-07-01T09:59'
+            //}, {
+            //    start: '2022-07-01T10:30',
+            //    end: '2022-07-01T11:29'
+            //}, {
+            //    start: '2022-07-01T12:00',
+            //    end: '2022-07-01T12:59'
+            //}]
+        }
+
+        function addMinutes(dt, minutes) {
+            const date = Date.parse(dt);
+            return new Date(date + minutes * 60000);
+        }
 
 
- mobiscroll.datepicker('#calendar', {
-     controls: ['time'],
-    timeFormat: 'HH:mm',
-    controls: ['calendar', 'timegrid'],
-    min: Date.now(),
-    max: maxDate,
-    minTime: startH,
-    maxTime: endH,
-    stepMinute: 30,
-    display: 'inline'
-});
 
-</script>
+        async function getData(url) {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            data.forEach(item => {
+                invalidDate = {
+                    start: item.startTime,
+                    end: item.endTime
+                }
+                datepickerSample.invalid.push(invalidDate);
+                additionalDate = {
+                    start: addMinutes(invalidDate.start, -30),
+                    end: addMinutes(invalidDate.end, -29)
+                }
+                datepickerSample.invalid.push(additionalDate);
+            });
+        }
+
+        appointmentBtn.forEach(button => {
+            button.addEventListener('click', async e => {
+                currentServiceBtn = e.target.id;
+                let aaaa = e.target;
+                console.log(aaaa);
+                workerId = e.parent.querySelector('#workerLabel1');
+                console.log(workerId);
+                let url = noServiceUrl + '/' + currentServiceBtn.toString();
+                datepickerSample.invalid = [];
+                await getData(url);
+                mobiscroll.datepicker('#calendar', datepickerSample);
+            });
+        });
 
 
-<script>
-            // Initialize and add the map
-    function initMap() {
-      // The location of Uluru
-      const uluru = { lat: -25.344, lng: 131.031 };
-      // The map, centered at Uluru
-      const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 4,
-        center: uluru,
-      });
-      // The marker, positioned at Uluru
-      const marker = new google.maps.Marker({
-        position: uluru,
-        map: map,
-      });
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    @*<script>
+        // Initialize and add the map
+        function initMap() {
+            // The location of Uluru
+            const uluru = { lat: -25.344, lng: 131.031 };
+            // The map, centered at Uluru
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 4,
+                center: uluru,
+            });
+            // The marker, positioned at Uluru
+            const marker = new google.maps.Marker({
+                position: uluru,
+                map: map,
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
+        defer></script>*@
     }
-
-    window.initMap = initMap;
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap&v=weekly"
-        defer></script>
-}

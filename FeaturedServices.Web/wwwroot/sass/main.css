@@ -1,0 +1,39 @@
+﻿input[id^=workerLabel] {
+  display: none;
+}
+
+label[for^=workerLabel] {
+  margin-top: 5px;
+  position: relative;
+  color: #01cc65;
+  font-family: "Poppins", sans-serif;
+  font-size: 17px;
+  border: 2px solid #01cc65;
+  border-radius: 5px;
+  /*padding: 10px 2px;*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+label[for^=workerLabel]:before {
+  content: "";
+  /*height: 30px;*/
+  /*width: 30px;*/
+  /*border: 3px solid #01cc65;*/
+  /*border-radius: 50%;*/
+  margin-right: 20px;
+}
+
+input[id^=workerLabel]:checked + label[for^=workerLabel] {
+  background-color: #01cc65;
+  color: white;
+}
+
+input[id^=workerLabel]:checked + label[for^=workerLabel]:before {
+  /*height: 16px;*/
+  /*width: 16px;*/
+  /*border: 10px solid white;*/
+  background-color: #01cc65;
+}

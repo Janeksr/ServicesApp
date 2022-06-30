@@ -1,6 +1,6 @@
 ﻿using FeaturedServices.Application.Contracts;
 using FeaturedServices.Common.Constants;
-using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

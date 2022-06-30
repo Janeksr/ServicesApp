@@ -1,4 +1,4 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Common.Models.Image;
 using FeaturedServices.Data;
 using System;
 using System.Collections.Generic;

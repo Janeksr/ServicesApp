@@ -1,4 +1,4 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Common.Models.CompanyType;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
