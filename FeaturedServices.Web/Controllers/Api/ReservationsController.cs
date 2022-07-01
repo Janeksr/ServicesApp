@@ -9,6 +9,7 @@ using FeaturedServices.Data;
 using Microsoft.AspNetCore.Authorization;
 using FeaturedServices.Application.Contracts;
 using FeaturedServices.Common.Models.Reservation;
+using Microsoft.AspNetCore.Identity;
 
 namespace FeaturedServices.Web.Controllers.Api
 {
@@ -18,11 +19,18 @@ namespace FeaturedServices.Web.Controllers.Api
     {
         private readonly ApplicationDbContext _context;
         private readonly IReservationRepository reservationRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly UserManager<Client> userManager;
 
-        public ReservationsController(ApplicationDbContext context, IReservationRepository reservationRepository)
+        public ReservationsController(ApplicationDbContext context, 
+            IReservationRepository reservationRepository,
+            IHttpContextAccessor httpContextAccessor,
+            UserManager<Client> userManager)
         {
             _context = context;
             this.reservationRepository = reservationRepository;
+            this.httpContextAccessor = httpContextAccessor;
+            this.userManager = userManager;
         }
 
         // GET: api/Reservations/5
@@ -87,21 +95,39 @@ namespace FeaturedServices.Web.Controllers.Api
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(NewReservationVM reservationVM)
         {
-            var duration = reservationVM.Duration - 1;
-            var reservation = new Reservation
+            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
+            if(user == null)
             {
-                ClientId = reservationVM.ClientId,
-                WorkerId = reservationVM.WorkerId,
-                ServiceId = reservationVM.ServiceId,
-                CompanyId = reservationVM.CompanyId,
-                StartTime = reservationVM.StartTime,
-                EndTime = reservationVM.StartTime.AddMinutes(duration),
-                Canceled = false
-            };
+                return StatusCode(401);
+            }
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var duration = reservationVM.Duration - 1;
+                    var reservation = new Reservation
+                    {
+                        ClientId = user.Id,
+                        WorkerId = reservationVM.WorkerId,
+                        ServiceId = reservationVM.ServiceId,
+                        CompanyId = reservationVM.CompanyId,
+                        StartTime = reservationVM.StartTime,
+                        EndTime = reservationVM.StartTime.AddMinutes(duration),
+                        Canceled = false
+                    };
+                    _context.Reservations.Add(reservation);
+                    _context.SaveChanges();
+                    return Ok(reservation);
+                }
+            }
+            catch (Exception ex)
+            {
 
-            _context.Reservations.Add(reservation);
-            _context.SaveChanges();
-            return Ok(reservation);
+                throw;
+            }
+
+            return BadRequest();
+            
 
         }
 

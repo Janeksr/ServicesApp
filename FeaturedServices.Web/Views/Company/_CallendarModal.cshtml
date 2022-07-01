@@ -5,7 +5,9 @@
 {
     var count = 0;
     string target = "staticBackdrop";
+    string request = "sendBookRequest";
     target += service.Id;
+    request += service.Id;
 
     <div class="modal fade" id="@target" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog modal-dialog-centered">
@@ -38,7 +40,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Book</button>
+                    <button type="button" class="btn btn-primary @request" data-bs-dismiss="modal">Book</button>
                 </div>
             </div>
         </div>

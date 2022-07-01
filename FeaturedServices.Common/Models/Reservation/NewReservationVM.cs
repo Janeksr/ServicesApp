@@ -16,9 +16,6 @@ namespace FeaturedServices.Common.Models.Reservation
         public int ServiceId { get; set; }
 
         [Required]
-        public string ClientId { get; set; }
-
-        [Required]
         public int CompanyId { get; set; }
 
         [Required]
