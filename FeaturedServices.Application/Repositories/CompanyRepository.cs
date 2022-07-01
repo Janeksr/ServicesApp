@@ -124,7 +124,6 @@ namespace FeaturedServices.Application.Repositories
             if (company == null) return null;
 
             var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
-
             if (image != null)
             {
                 var model = new CompanyClientVM
@@ -138,28 +137,29 @@ namespace FeaturedServices.Application.Repositories
                     ClosingHours = company.ClosingHours,
                     CompanyTypeName = company.CompanyType.Name,
                     ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title },
-                    ListOfServicesVMs = await GetWorkersWithServicesUser(company.Id),
-                    WorkersVMs = await workerRepository.GetWorkers(company.Id)
+                    ServicesWithWorkerVM = await GetWorkersWithServicesUser(company.Id),
+                    WorkersVMs = await workerRepository.GetWorkers(company.Id),
                 };
                 return model;
             }
             return null;
         }
 
-        public async Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id)
+        public async Task<List<ServicesWithWorkerVM>> GetWorkersWithServicesUser(int id)
         {
-            var model = await context.Services.Where(x => x.CompanyId == id).ToListAsync();
+            var model = await context.Services.Where(x => x.CompanyId == id).Include(x => x.Workers_Services).ToListAsync();
 
-            var workerServicesList = new List<ListOfServicesVM>();
+            var workerServicesList = new List<ServicesWithWorkerVM>();
             foreach (var service in model)
             {
-                var workerServices = new ListOfServicesVM
+                var workerServices = new ServicesWithWorkerVM
                 {
                     Id = service.Id,
                     Name = service.Name,
                     Description = service.Description,
                     Value = service.Value,
-                    Duration = service.Duration
+                    Duration = service.Duration,
+                    WorkerId = service.Workers_Services.Where(x => x.ServiceId == service.Id).Select(x => x.WorkerId).ToList()
                 };
                 workerServicesList.Add(workerServices);
             }

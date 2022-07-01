@@ -55,13 +55,13 @@
         <p class="fs-3">Services</p>
         <ul class="list-group list-group-flush">
 
-            @foreach (var item in Model.ListOfServicesVMs)
+            @foreach (var item in Model.ServicesWithWorkerVM)
             {
                 round++;
                 string target = "staticBackdrop";
-                string btnCallendar = "callendarView";
+                string btnCalendar = "btnCalendar";
                 target += round;
-                btnCallendar += round;
+                btnCalendar += item.Id;
 
                 <li class="list-group-item">
                     <div class="row d-flex align-content-between mb-3">
@@ -75,7 +75,7 @@
                                     @item.Duration.ToShortTimeString()h
                                 </div>
                                 <div class="col-6">
-                                    <button id="@item.Id" class="btn btn-outline-success btn-sm callendarView @btnCallendar" data-bs-toggle="modal" data-bs-target="#@target">Make an Appointment</button>
+                                    <button id="@item.Id" class="btn btn-outline-success btn-sm callendarView @btnCalendar" data-bs-toggle="modal" data-bs-target="#@target">Make an Appointment</button>
                                 </div>
                             </div>
                         </div>
@@ -129,25 +129,13 @@
             stepMinute: 30,
             display: 'inline',
             invalid: invalidDateArray
-            //invalid: [{
-            //    start: '2022-07-01T09:00',
-            //    end: '2022-07-01T09:59'
-            //}, {
-            //    start: '2022-07-01T10:30',
-            //    end: '2022-07-01T11:29'
-            //}, {
-            //    start: '2022-07-01T12:00',
-            //    end: '2022-07-01T12:59'
-            //}]
         }
 
         function addMinutes(dt, minutes) {
             const date = Date.parse(dt);
             return new Date(date + minutes * 60000);
         }
-
-
-
+        //.staticBackdropX - modal X id serwisu
         async function getData(url) {
             const response = await fetch(url);
             const data = await response.json();
@@ -169,14 +157,29 @@
         appointmentBtn.forEach(button => {
             button.addEventListener('click', async e => {
                 currentServiceBtn = e.target.id;
-                let aaaa = e.target;
-                console.log(aaaa);
-                workerId = e.parent.querySelector('#workerLabel1');
-                console.log(workerId);
-                let url = noServiceUrl + '/' + currentServiceBtn.toString();
+
+                const modalClass = '#staticBackdrop' + currentServiceBtn.toString();
+                const modalEl = document.querySelector(modalClass);
+                const checked = modalEl.querySelector('input[type=radio]:checked');
+                const allRadioBtn = modalEl.querySelectorAll('input[type=radio]');
+
+                let workerId = (checked.id).slice(11);
+                //let url = noServiceUrl + '/' + currentServiceBtn.toString() + '/' + workerId;
+                let url = noServiceUrl + '/' + workerId;
                 datepickerSample.invalid = [];
                 await getData(url);
                 mobiscroll.datepicker('#calendar', datepickerSample);
+
+                allRadioBtn.forEach(radio => {
+                    radio.addEventListener('change', async e => {
+                        workerId = (e.target.id).slice(11);
+                        //url = noServiceUrl + '/' + currentServiceBtn.toString() + '/' + workerId;
+                        url = noServiceUrl + '/' + workerId;
+                        datepickerSample.invalid = [];
+                        await getData(url);
+                        mobiscroll.datepicker('#calendar', datepickerSample);
+                    });
+                });
             });
         });
 

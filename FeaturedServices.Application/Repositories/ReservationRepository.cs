@@ -23,12 +23,14 @@ namespace FeaturedServices.Application.Repositories
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<ReservationVM>> GetAll(int companyId, int serviceId)
+        public async Task<IEnumerable<ReservationVM>> GetAll(int companyId, int workerId)
         {
             var reservations = await context.Reservations
                 .Where(x => x.CompanyId == companyId)
                 .Where(x => x.StartTime >= DateTime.Now)
-                .Where(x => x.ServiceId == serviceId)
+                //.Where(x => x.ServiceId == serviceId)
+                .Where(x => x.WorkerId == workerId)
+                .Where(x => x.Canceled == false)
                 .ProjectTo<ReservationVM>(mapper.ConfigurationProvider)
                 .ToListAsync();
             return reservations;
