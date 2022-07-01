@@ -1,5 +1,6 @@
 ﻿using FeaturedServices.Common.Models.Service;
 using FeaturedServices.Common.Models.Worker;
+using FeaturedServices.Common.Models.WorkerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace FeaturedServices.Common.Models.Company
 {
     public class CompanyClientVM : CompanyExposeVM
     {
-        public List<ListOfServicesVM> ListOfServicesVMs { get; set; }
+        public List<ServicesWithWorkerVM> ServicesWithWorkerVM { get; set; }
         public List<WorkerVM> WorkersVMs { get; set; }
     }
 }

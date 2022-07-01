@@ -21,6 +21,8 @@ namespace FeaturedServices.Common.Models.Service
         [Display(Name = "Duration Of Service")]
         public DateTime Duration { get; set; }
 
+        public int WorkerId { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (Duration.ToShortTimeString() == "00:00")

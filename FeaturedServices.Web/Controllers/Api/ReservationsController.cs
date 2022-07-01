@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Authorization;
 using FeaturedServices.Application.Contracts;
+using FeaturedServices.Common.Models.Reservation;
 
 namespace FeaturedServices.Web.Controllers.Api
 {
@@ -25,10 +26,10 @@ namespace FeaturedServices.Web.Controllers.Api
         }
 
         // GET: api/Reservations/5
-        [HttpGet("{id}/{serviceId}")]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int id, int serviceId)
+        [HttpGet("{id}/{workerId}")]
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int id, int workerId)
         {
-            var test = await reservationRepository.GetAll(id, serviceId);
+            var test = await reservationRepository.GetAll(id, workerId);
             return Ok(test);
         }
 
@@ -81,20 +82,28 @@ namespace FeaturedServices.Web.Controllers.Api
         //    return NoContent();
         //}
 
-        //// POST: api/Reservations
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
-        //{
-        //    if (_context.Reservations == null)
-        //    {
-        //        return Problem("Entity set 'ApplicationDbContext.Reservations'  is null.");
-        //    }
-        //    _context.Reservations.Add(reservation);
-        //    await _context.SaveChangesAsync();
+        // POST: api/Reservations
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Reservation>> PostReservation(NewReservationVM reservationVM)
+        {
+            var duration = reservationVM.Duration - 1;
+            var reservation = new Reservation
+            {
+                ClientId = reservationVM.ClientId,
+                WorkerId = reservationVM.WorkerId,
+                ServiceId = reservationVM.ServiceId,
+                CompanyId = reservationVM.CompanyId,
+                StartTime = reservationVM.StartTime,
+                EndTime = reservationVM.StartTime.AddMinutes(duration),
+                Canceled = false
+            };
 
-        //    return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
-        //}
+            _context.Reservations.Add(reservation);
+            _context.SaveChanges();
+            return Ok(reservation);
+
+        }
 
         //// DELETE: api/Reservations/5
         //[HttpDelete("{id}")]

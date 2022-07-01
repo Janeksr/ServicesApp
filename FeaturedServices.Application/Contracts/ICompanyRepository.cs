@@ -18,6 +18,6 @@ namespace FeaturedServices.Application.Contracts
         Task<int> GetCompanyId();
         Task<IQueryable<CompanyExposeVM>> GetAllCompanies();
         Task<CompanyClientVM> GetCompanyForUser(int id);
-        Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id);
+        Task<List<ServicesWithWorkerVM>> GetWorkersWithServicesUser(int id);
     }
 }
