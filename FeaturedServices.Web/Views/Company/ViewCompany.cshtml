@@ -72,7 +72,7 @@
                             <div class="row">
                                 <div class="col-6">
                                     @item.Value$
-                                    @item.Duration.ToShortTimeString()h
+                                    <span class="duration">@item.Duration.ToShortTimeString()</span>h
                                 </div>
                                 <div class="col-6">
                                     <button id="@item.Id" class="btn btn-outline-success btn-sm callendarView @btnCalendar" data-bs-toggle="modal" data-bs-target="#@target">Make an Appointment</button>
@@ -100,27 +100,32 @@
 
 @section Scripts{
     <script>
-
+        //DATE
         const date = new Date();
         const maxDate = date.setMonth(date.getMonth() + 2);
         const startH = '@Model.OpeningHours.ToShortTimeString()';
         const endH = '@Model.ClosingHours.AddHours(-1).ToShortTimeString()';
-        const companyId = @Model.Id;
-        const partialUrl = 'https://localhost:7030/api/reservations/';
-        const noServiceUrl = partialUrl + companyId.toString();
 
-        let workerId;
+        //API URL
+        const companyId = @Model.Id;
+        const partialUrl = 'https://localhost:7030/api/reservations';
+        const noServiceUrl = partialUrl + '/' + companyId.toString();
+
+        //TOAST
         const errorText = "An error has occured.";
         const errorBg = "linear-gradient(to right, #b3c12b, #d05146)";
         const errorDuration = 5000;
+        const acceptedText = "The visit has been booked.";
+        const acceptedBg = "linear-gradient(to right, #43b9c7, #69ab29)";
+        const acceptedDuration = 7000;
+        const connectionErTxt = 'Cannot connect to the server, please try again later.';
 
+        //CALENDAR
         const appointmentBtn = document.querySelectorAll('.callendarView');
-        let currentServiceBtn;
         let invalidDateArray = new Array();
         let invalidDate;
         let additionalDate;
         let bookBtn;
-
         let datepickerSample = {
             controls: ['time'],
             timeFormat: 'HH:mm',
@@ -134,13 +139,34 @@
             invalid: invalidDateArray
         }
 
+        //SEND DATA
+        let currentServiceBtn;
+        let workerId;
+        let durationMinutes;
+        let startDate;
+        let dataToSend;
+
+
+        //============ FUNCTIONS ============
+
+
+        //Add minutes
         function addMinutes(dt, minutes) {
             const date = Date.parse(dt);
             return new Date(date + minutes * 60000);
-        };
+        }
 
+
+        //Get data from API
         async function getData(url) {
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            }).catch((error) => {
+                runToast(connectionErTxt, errorBg, acceptedDuration);
+            });
             const data = await response.json();
 
             data.forEach(item => {
@@ -155,50 +181,77 @@
                 }
                 datepickerSample.invalid.push(additionalDate);
             });
-        };
+        }
 
+        //Set action on each button
         appointmentBtn.forEach(button => {
             button.addEventListener('click', async e => {
+
                 currentServiceBtn = e.target.id;
 
-                const modalClass = '#staticBackdrop' + currentServiceBtn.toString();
-                const modalEl = document.querySelector(modalClass);
+                //ELEMENTS
+                const modalId = '#staticBackdrop' + currentServiceBtn.toString();
+                const modalEl = document.querySelector(modalId);
                 const checked = modalEl.querySelector('input[type=radio]:checked');
                 const allRadioBtn = modalEl.querySelectorAll('input[type=radio]');
 
-                let workerId = (checked.id).slice(11);
-                //let url = noServiceUrl + '/' + currentServiceBtn.toString() + '/' + workerId;
+                //DATA
+                workerId = (checked.id).slice(11);
                 let url = noServiceUrl + '/' + workerId;
                 datepickerSample.invalid = [];
+                let serviceDuration = e.target.closest('.row').querySelector('.duration').innerText;
+                durationMinutes = getMinutes(serviceDuration);
+
+                // FULLFILL CALENDAR
                 await getData(url);
                 mobiscroll.datepicker('#calendar', datepickerSample);
-                
-                bookBtn = document.querySelector('.sendBookRequest' + currentServiceBtn.toString());
-                console.log(bookBtn);
 
+                bookBtn = document.querySelector('.sendBookRequest' + currentServiceBtn.toString());
+
+                //SELECT WORKER BY RADIO BTN
                 allRadioBtn.forEach(radio => {
                     radio.addEventListener('change', async e => {
                         workerId = (e.target.id).slice(11);
-                        //url = noServiceUrl + '/' + currentServiceBtn.toString() + '/' + workerId;
                         url = noServiceUrl + '/' + workerId;
                         datepickerSample.invalid = [];
                         await getData(url);
                         mobiscroll.datepicker('#calendar', datepickerSample);
                     });
                 });
+
+                //SELECT DATETIME
+                // onClick
+                modalEl.addEventListener('click', e => {
+                    let dateString = modalEl.querySelector('.mbsc-timegrid-item.mbsc-selected.mbsc-ios').getAttribute('data-timeslot');
+                    let date = new Date(parseInt(dateString));
+                    startDate = '';
+                    startDate = JSON.stringify(addMinutes(date, 120));
+                });
+
+                //onStart
+                setTimeout(getElementPls, 500, modalEl);
+
+                bookBtn.addEventListener('click', ev => {
+                    let test = startDate.split('');
+                    test.splice(0, 1);
+                    test.splice(19, 6);
+                    startDate = test.join('');
+                    dataToSend = {
+                        ServiceId: currentServiceBtn,
+                        WorkerId: workerId,
+                        CompanyId: companyId.toString(),
+                        Duration: durationMinutes.toString(),
+                        StartTime: startDate
+                    }
+                    sendData(dataToSend);
+                });
+
             });
         });
 
-
-        const data = {
-            ServiceId: '100',
-            WorkerId: '1',
-            CompanyId: '5',
-            Duration: '60',
-            StartTime: '2022-07-02T18:00:00'
-        };
-        function sendData() {
-            fetch('https://localhost:7030/api/reservations', {
+        //Send data to the server
+        function sendData(data) {
+            fetch(partialUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -208,21 +261,24 @@
                 .then(response => {
                     response.json();
                     if (response.status == 401) {
-                        window.location.href = 'https://localhost:7030/Identity/Account/Login';
+                        window.location.href = '/Identity/Account/Login';
                     } else if (response.status == 500) {
                         runToast(errorText, errorBg, errorDuration);
+                    } else if (response.status == 200) {
+                        runToast(acceptedText, acceptedBg, acceptedDuration);
                     }
                 })
                 .catch((error) => {
+                    runToast(connectionErTxt, errorBg, acceptedDuration);
                 });
-        };
-        //sendData();
+        }
 
+        //Run toast
         function runToast(text, background, duration) {
             Toastify({
                 text: text,
                 duration: duration,
-                destination: "https://github.com/apvarun/toastify-js",
+                destination: "",
                 newWindow: true,
                 close: true,
                 gravity: "top", // `top` or `bottom`
@@ -233,8 +289,20 @@
                 },
                 onClick: function() { } // Callback after click
             }).showToast();
-        };
+        }
 
+        function getMinutes(duration) {
+            const time = duration.split(':');
+            const minutes = parseInt(time[0]) * 60 + parseInt(time[1]);
+            return minutes;
+        }
+
+        function getElementPls(modalEl) {
+            let dateString = modalEl.querySelector('.mbsc-timegrid-item.mbsc-selected.mbsc-ios').getAttribute('data-timeslot');
+            let date = new Date(parseInt(dateString));
+            startDate = '';
+            startDate = JSON.stringify(addMinutes(date, 120));
+        }
 
 
     </script>

@@ -93,6 +93,7 @@ namespace FeaturedServices.Web.Controllers.Api
         // POST: api/Reservations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        //[Authorize]
         public async Task<ActionResult<Reservation>> PostReservation(NewReservationVM reservationVM)
         {
             var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
