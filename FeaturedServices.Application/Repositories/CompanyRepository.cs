@@ -93,10 +93,18 @@ namespace FeaturedServices.Application.Repositories
             var modelList = new List<CompanyExposeVM>();
             foreach (var company in companies)
             {
-                var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
-                var workers = await context.Workers.Where(x => x.CompanyId == company.Company.Id).ToListAsync();
+                var image = await context.ImageCompanies
+                    .Where(x => x.CompanyId == company.Company.Id)
+                    .Where(x => x.MainImage == true)
+                    .FirstOrDefaultAsync();
 
-                if (image != null && workers != null)
+                var workers = await context.Workers
+                    .Where(x => x.CompanyId == company.Company.Id)
+                    .Where(x => x.TotalServices > 0)
+                    .ToListAsync();
+
+
+                if (image != null && workers.Count() > 0)
                 {
                     var model = new CompanyExposeVM
                     {
