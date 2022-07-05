@@ -18,9 +18,9 @@ namespace FeaturedServices.Web.Controllers.Api
     public class ReservationsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IReservationRepository reservationRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
-        private readonly UserManager<Client> userManager;
+        private readonly IReservationRepository _reservationRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<Client> _userManager;
 
         public ReservationsController(ApplicationDbContext context, 
             IReservationRepository reservationRepository,
@@ -28,16 +28,16 @@ namespace FeaturedServices.Web.Controllers.Api
             UserManager<Client> userManager)
         {
             _context = context;
-            this.reservationRepository = reservationRepository;
-            this.httpContextAccessor = httpContextAccessor;
-            this.userManager = userManager;
+            this._reservationRepository = reservationRepository;
+            this._httpContextAccessor = httpContextAccessor;
+            this._userManager = userManager;
         }
 
         // GET: api/Reservations/5
         [HttpGet("{id}/{workerId}")]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int id, int workerId)
         {
-            var test = await reservationRepository.GetAll(id, workerId);
+            var test = await _reservationRepository.GetAll(id, workerId);
             return Ok(test);
         }
 
@@ -93,10 +93,9 @@ namespace FeaturedServices.Web.Controllers.Api
         // POST: api/Reservations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        //[Authorize]
         public async Task<ActionResult<Reservation>> PostReservation(NewReservationVM reservationVM)
         {
-            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
+            var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
             if(user == null)
             {
                 return StatusCode(401);
@@ -105,20 +104,9 @@ namespace FeaturedServices.Web.Controllers.Api
             {
                 if (ModelState.IsValid)
                 {
-                    var duration = reservationVM.Duration - 1;
-                    var reservation = new Reservation
-                    {
-                        ClientId = user.Id,
-                        WorkerId = reservationVM.WorkerId,
-                        ServiceId = reservationVM.ServiceId,
-                        CompanyId = reservationVM.CompanyId,
-                        StartTime = reservationVM.StartTime,
-                        EndTime = reservationVM.StartTime.AddMinutes(duration),
-                        Canceled = false
-                    };
-                    _context.Reservations.Add(reservation);
-                    _context.SaveChanges();
-                    return Ok(reservation);
+                    var reservationResult = await _reservationRepository.AddResrvation(reservationVM, user.Id);
+                    if (!reservationResult) return StatusCode(409);
+                    return Ok();
                 }
             }
             catch (Exception ex)
@@ -128,8 +116,6 @@ namespace FeaturedServices.Web.Controllers.Api
             }
 
             return BadRequest();
-            
-
         }
 
         //// DELETE: api/Reservations/5

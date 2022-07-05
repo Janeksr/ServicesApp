@@ -264,6 +264,8 @@
                         window.location.href = '/Identity/Account/Login';
                     } else if (response.status == 500) {
                         runToast(errorText, errorBg, errorDuration);
+                    } else if(response.status == 409){
+                        runToast('This hour has already been taken.', errorBg, acceptedDuration);
                     } else if (response.status == 200) {
                         runToast(acceptedText, acceptedBg, acceptedDuration);
                     }

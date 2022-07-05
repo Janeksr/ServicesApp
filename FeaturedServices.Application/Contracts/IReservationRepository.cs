@@ -11,5 +11,6 @@ namespace FeaturedServices.Application.Contracts
     public interface IReservationRepository : IGenericRepository<Reservation>
     {
         Task<IEnumerable<ReservationVM>> GetAll(int companyId, int workerId);
+        Task<bool> AddResrvation(NewReservationVM newReservationVM, string userId);
     }
 }

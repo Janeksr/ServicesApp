@@ -24,6 +24,7 @@ namespace FeaturedServices.Application.Configurations
             CreateMap<Service, ServiceEditVM>().ReverseMap();
             CreateMap<ImageCompany, ImageCompanyVM>().ReverseMap();
             CreateMap<Reservation, ReservationVM>().ReverseMap();
+            CreateMap<Reservation, NewReservationVM>().ReverseMap();
         }
     }
 }
