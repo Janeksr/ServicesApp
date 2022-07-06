@@ -3,6 +3,8 @@ using AutoMapper.QueryableExtensions;
 using FeaturedServices.Application.Contracts;
 using FeaturedServices.Common.Models.Reservation;
 using FeaturedServices.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,30 +20,38 @@ namespace FeaturedServices.Application.Repositories
         private readonly IMapper _mapper;
         private readonly IServiceRepository _serviceRepository;
         private readonly ICompanyRepository _companyRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserManager<Client> _userManager;
 
         public ReservationRepository(ApplicationDbContext context, IMapper mapper,
             IServiceRepository serviceRepository,
-            ICompanyRepository companyRepository) : base(context)
+            ICompanyRepository companyRepository,
+            IHttpContextAccessor httpContextAccessor,
+            UserManager<Client> userManager) : base(context)
         {
             _context = context;
             _mapper = mapper;
             _serviceRepository = serviceRepository;
             _companyRepository = companyRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _userManager = userManager;
         }
 
         public async Task<bool> AddResrvation(NewReservationVM newReservationVM, string userId)
         {
+            var today = DateTime.Now.Date;
+            if(newReservationVM.StartTime.Date > today.AddMonths(2)) return false;
+
             var serviceDuration = await _context.Services.Where(x => x.Id == newReservationVM.ServiceId).Select(x => x.Duration).FirstOrDefaultAsync();
-
-
 
             var duration = newReservationVM.Duration - 1;
             var reservation = _mapper.Map<Reservation>(newReservationVM);
             reservation.EndTime = newReservationVM.StartTime.AddMinutes(duration);
             reservation.ClientId = userId;
 
+            var result = await CheckCompanyWorkerService(newReservationVM);
 
-            if (await CheckResevation(reservation))
+            if (await CheckReservationDate(reservation) && result)
             {
                 await AddAsync(reservation);
                 return true;
@@ -61,25 +71,62 @@ namespace FeaturedServices.Application.Repositories
             return reservations;
         }
 
-        private async Task<bool> CheckResevation(Reservation rv)
+        private async Task<bool> CheckReservationDate(Reservation rv)
         {
             var company = await _companyRepository.GetAsync(rv.CompanyId);
             if (company == null) return false;
-            if (
-                rv.StartTime.TimeOfDay > company.ClosingHours.TimeOfDay
+            if (rv.StartTime.TimeOfDay > company.ClosingHours.TimeOfDay
                 || rv.EndTime.TimeOfDay > company.ClosingHours.TimeOfDay
                 || rv.StartTime.TimeOfDay < company.OpeningHours.TimeOfDay) return false;
 
-            var isReservable = _context.Reservations
+            var isReservable = await _context.Reservations
                 .Where(x => x.WorkerId == rv.WorkerId)
                 .Where(x => x.Canceled == false)
                 .Where(x => x.StartTime.Date == rv.StartTime.Date)
-                .Where(x => x.StartTime > rv.EndTime || x.EndTime < rv.StartTime)
-                .Count();
+                .Select(x => new
+                {
+                    x.Id,
+                    x.StartTime,
+                    x.EndTime
+                })
+                .ToListAsync();
 
-            if (isReservable > 0) return true;
+            var listOfReservationsId = new List<int>();
 
+            foreach (var reservation in isReservable)
+            {
+                if (reservation.EndTime < rv.StartTime || reservation.StartTime > rv.EndTime)
+                {
+
+                }
+                else
+                {
+                    listOfReservationsId.Add(reservation.Id);
+                }
+            }
+
+            if (listOfReservationsId.Any()) return false;
+            return true;
+        }
+
+        private async Task<bool> CheckCompanyWorkerService(NewReservationVM nRv)
+        {
+            var companyExists = await _context.Companies.Where(x => x.Id == nRv.CompanyId).AnyAsync();
+            if (!companyExists) return false;
+
+            var realtion = await _context.Workers_Services
+                .Where(x => x.ServiceId == nRv.ServiceId && x.WorkerId == nRv.WorkerId)
+                .Include(x => x.Worker)
+                .Where(x => x.Worker.CompanyId == nRv.CompanyId)
+                .AnyAsync();
+
+            if(realtion) return true;
             return false;
+        }
+
+        public async Task GetUserReservations()
+        {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
 
         }
     }
