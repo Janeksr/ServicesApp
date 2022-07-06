@@ -124,10 +124,34 @@ namespace FeaturedServices.Application.Repositories
             return false;
         }
 
-        public async Task GetUserReservations()
+        public async Task<List<UserReservations>> GetUserReservations()
         {
             var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+            var reservations = await GetReservationsByUser(user.Id);
+            return reservations;
+        }
 
+        private async Task<List<UserReservations>> GetReservationsByUser(string userId)
+        {
+            
+            var reservationData = await _context.Reservations
+                .Include(x => x.Worker)
+                .Include(x => x.Service)
+                .ThenInclude(x => x.Company)
+                .Where(x => x.ClientId == userId)
+                .Select(x => new UserReservations
+                {
+                    StartTime = x.StartTime,
+                    EndTime = x.EndTime,
+                    Duration = x.Service.Duration.TimeOfDay,
+                    ServiceName = x.Service.Name,
+                    WorkerName = x.Worker.Firstname + " " + x.Worker.Lastname,
+                    CompanyName = x.Worker.Company.Name,
+                    CompanyAddress = x.Worker.Company.StreetNameAndNumber
+                })
+                .ToListAsync();
+
+            return reservationData;
         }
     }
 }
