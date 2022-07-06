@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeaturedServices.Common.Models
+namespace FeaturedServices.Common.Models.WorkerServices
 {
     public class AssignWorkerWithServicesPostVM
     {

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeaturedServices.Common.Models
+namespace FeaturedServices.Common.Models.Worker
 {
     public class WorkerVM
     {
@@ -15,7 +15,7 @@ namespace FeaturedServices.Common.Models
         [Display(Name = "First Name")]
         [MaxLength(50)]
         public string Firstname { get; set; }
-        
+
         [Required]
         [Display(Name = "First Name")]
         [MaxLength(50)]

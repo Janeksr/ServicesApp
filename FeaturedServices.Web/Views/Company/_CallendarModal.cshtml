@@ -1,0 +1,48 @@
+﻿@model CompanyClientVM
+
+
+@foreach (var service in Model.ServicesWithWorkerVM)
+{
+    var count = 0;
+    string target = "staticBackdrop";
+    string request = "sendBookRequest";
+    target += service.Id;
+    request += service.Id;
+
+    <div class="modal fade" id="@target" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col-8" id="calendar"></div>
+                    <div class="col-4 myContainer">
+                        <form class="">
+                            @foreach (var workerId in service.WorkerId)
+                            {
+                                string label = "workerLabel" + workerId;
+                                if (count == 0)
+                                {
+                                    <input type="radio" name="worker" id="@label" checked="checked">
+                                }
+                                else
+                                {
+                                    <input type="radio" name="worker" id="@label">
+                                }
+                                <label for="@label"><span>@Model.WorkersVMs.Where(x => x.Id == workerId).Select(x => x.Firstname).FirstOrDefault()</span></label>
+                                <br />
+                                count++;
+                            }
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary @request" data-bs-dismiss="modal">Book</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}

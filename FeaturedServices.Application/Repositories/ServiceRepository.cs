@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FeaturedServices.Application.Contracts;
-using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.Service;
 using FeaturedServices.Data;
 using Microsoft.EntityFrameworkCore;
 using System;

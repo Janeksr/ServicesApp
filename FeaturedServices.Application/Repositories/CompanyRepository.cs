@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using FeaturedServices.Application.Contracts;
-using FeaturedServices.Common.Models;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -11,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
+using FeaturedServices.Common.Models.Company;
+using FeaturedServices.Common.Models.Service;
+using FeaturedServices.Common.Models.Image;
 
 namespace FeaturedServices.Application.Repositories
 {
@@ -20,15 +22,19 @@ namespace FeaturedServices.Application.Repositories
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly UserManager<Client> userManager;
         private readonly IMapper mapper;
+        private readonly IWorkerRepository workerRepository;
 
         public CompanyRepository(ApplicationDbContext context,
             IHttpContextAccessor httpContextAccessor,
-            UserManager<Client> userManager, IMapper mapper) : base(context)
+            IWorkerRepository workerRepository,
+            UserManager<Client> userManager, 
+            IMapper mapper) : base(context)
         {
             this.context = context;
             this.httpContextAccessor = httpContextAccessor;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.workerRepository = workerRepository;
         }
 
         public async Task<bool> CreateCompany(CompanyVM model)
@@ -79,30 +85,37 @@ namespace FeaturedServices.Application.Repositories
                 .Select(x => new
                 {
                     x.Company,
-                    //x.TotalServices,
                     x.Company.CompanyType.Name
                 })
                 .Distinct()
-                //.Where(x => x.TotalServices > 0)
                 .ToListAsync();
 
             var modelList = new List<CompanyExposeVM>();
-            foreach (var item in companies)
+            foreach (var company in companies)
             {
-                var image = await context.ImageCompanies.Where(x => x.CompanyId == item.Company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
-                if (image != null)
+                var image = await context.ImageCompanies
+                    .Where(x => x.CompanyId == company.Company.Id)
+                    .Where(x => x.MainImage == true)
+                    .FirstOrDefaultAsync();
+
+                var workers = await context.Workers
+                    .Where(x => x.CompanyId == company.Company.Id)
+                    .Where(x => x.TotalServices > 0)
+                    .ToListAsync();
+
+
+                if (image != null && workers.Count() > 0)
                 {
                     var model = new CompanyExposeVM
                     {
-                        Id = item.Company.Id,
-                        Name = item.Company.Name,
-                        Description = item.Company.Description,
-                        PhoneNumber = item.Company.PhoneNumber,
-                        City = item.Company.City,
-                        StreetNameAndNumber = item.Company.StreetNameAndNumber,
-                        OpeningHours = item.Company.OpeningHours,
-                        ClosingHours = item.Company.ClosingHours,
-                        CompanyTypeName = item.Company.CompanyType.Name,
+                        Id = company.Company.Id,
+                        Name = company.Company.Name,
+                        PhoneNumber = company.Company.PhoneNumber,
+                        City = company.Company.City,
+                        StreetNameAndNumber = company.Company.StreetNameAndNumber,
+                        OpeningHours = company.Company.OpeningHours,
+                        ClosingHours = company.Company.ClosingHours,
+                        CompanyTypeName = company.Company.CompanyType.Name,
                         ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title }
                     };
                     modelList.Add(model);
@@ -112,53 +125,19 @@ namespace FeaturedServices.Application.Repositories
             return modelList.AsQueryable();
         }
 
-        public async Task<CompanyExposeVM> GetCompany()
-        {
-            var user = await userManager.GetUserAsync(httpContextAccessor?.HttpContext?.User);
-            var company = context.Companies.Include(x => x.CompanyType).Where(x => x.ClientId == user.Id).FirstOrDefault();
-            if (company == null) return null;
-
-            var servicesAssignment = context.Workers.Where(x => x.CompanyId == company.Id).Where(x => x.TotalServices > 0).Any();
-            if (servicesAssignment == false) return null;
-
-            var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
-
-            if (image != null)
-            {
-                var model = new CompanyExposeVM
-                {
-                    Id = company.Id,
-                    Name = company.Name,
-                    Description = company.Description,
-                    PhoneNumber = company.PhoneNumber,
-                    City = company.City,
-                    StreetNameAndNumber = company.StreetNameAndNumber,
-                    OpeningHours = company.OpeningHours,
-                    ClosingHours = company.ClosingHours,
-                    CompanyTypeName = company.CompanyType.Name,
-                    ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title },
-                };
-                return model;
-            }
-            return null;
-
-        }
-
-        public async Task<CompanyExposeVM> GetCompanyForUser(int id)
+        public async Task<CompanyClientVM> GetCompanyForUser(int id)
         {
             if (!context.Workers.Include(x => x.Workers_Services).Where(x => x.CompanyId == id).Any()) return null;
             var company = context.Companies.Include(x => x.CompanyType).Where(x => x.Id == id).FirstOrDefault();
             if (company == null) return null;
 
             var image = await context.ImageCompanies.Where(x => x.CompanyId == company.Id).Where(x => x.MainImage == true).FirstOrDefaultAsync();
-
             if (image != null)
             {
-                var model = new CompanyExposeVM
+                var model = new CompanyClientVM
                 {
                     Id = company.Id,
                     Name = company.Name,
-                    Description = company.Description,
                     PhoneNumber = company.PhoneNumber,
                     City = company.City,
                     StreetNameAndNumber = company.StreetNameAndNumber,
@@ -166,27 +145,29 @@ namespace FeaturedServices.Application.Repositories
                     ClosingHours = company.ClosingHours,
                     CompanyTypeName = company.CompanyType.Name,
                     ImageCompanyExposeVM = new ImageCompanyExposeVM { ImageName = image.ImageName, Title = image.Title },
-                    ListOfServicesVMs = await GetWorkersWithServicesUser(company.Id)
+                    ServicesWithWorkerVM = await GetWorkersWithServicesUser(company.Id),
+                    WorkersVMs = await workerRepository.GetWorkers(company.Id),
                 };
                 return model;
             }
             return null;
         }
 
-        public async Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id)
+        public async Task<List<ServicesWithWorkerVM>> GetWorkersWithServicesUser(int id)
         {
-            var model = await context.Services.Where(x => x.CompanyId == id).ToListAsync();
+            var model = await context.Services.Where(x => x.CompanyId == id).Include(x => x.Workers_Services).ToListAsync();
 
-            var workerServicesList = new List<ListOfServicesVM>();
+            var workerServicesList = new List<ServicesWithWorkerVM>();
             foreach (var service in model)
             {
-                var workerServices = new ListOfServicesVM
+                var workerServices = new ServicesWithWorkerVM
                 {
                     Id = service.Id,
                     Name = service.Name,
                     Description = service.Description,
                     Value = service.Value,
-                    Duration = service.Duration
+                    Duration = service.Duration,
+                    WorkerId = service.Workers_Services.Where(x => x.ServiceId == service.Id).Select(x => x.WorkerId).ToList()
                 };
                 workerServicesList.Add(workerServices);
             }

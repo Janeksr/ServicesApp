@@ -1,6 +1,6 @@
 ﻿using FeaturedServices.Application.Contracts;
 using FeaturedServices.Common.Constants;
-using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.Company;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -123,7 +123,8 @@ namespace FeaturedServices.Web.Controllers
 
         public async Task<IActionResult> PreviewCompany()
         {
-            var model = await companyRepository.GetCompany();
+            var id = await companyRepository.GetCompanyId();
+            var model = await companyRepository.GetCompanyForUser(id);
             if (model == null)
             {
                 ModelState.AddModelError("CustomError", "Please check if You have added image and any service to your company.");

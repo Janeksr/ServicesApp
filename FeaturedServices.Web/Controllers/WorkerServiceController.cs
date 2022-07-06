@@ -1,6 +1,7 @@
 ﻿using FeaturedServices.Application.Contracts;
 using FeaturedServices.Common.Constants;
 using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.WorkerServices;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,17 +14,19 @@ namespace FeaturedServices.Web.Controllers
     {
         private readonly IWorkersServicesRepository workersServicesRepository;
         private readonly IWorkerRepository workerRepository;
+        private readonly ICompanyRepository companyRepository;
 
-        public WorkerServiceController(IWorkersServicesRepository workersServicesRepository, IWorkerRepository workerRepository)
+        public WorkerServiceController(IWorkersServicesRepository workersServicesRepository, IWorkerRepository workerRepository, ICompanyRepository companyRepository)
         {
             this.workersServicesRepository = workersServicesRepository;
             this.workerRepository = workerRepository;
+            this.companyRepository = companyRepository;
         }
         public async Task<IActionResult> Assignment(int id)
         {
             var worker = await workerRepository.GetWorker(id);
             if(worker == null) return RedirectToAction("MyCompany", "Company", new { error = "CustomError", errorMsg = "That's not your employee." });
-            var servicesList = await workersServicesRepository.PopulateSevices(worker.Id);
+            var servicesList = await workersServicesRepository.PopulateSevices(worker.Id, await companyRepository.GetCompanyId());
             if (servicesList.Count == 0)
             {
                 return RedirectToAction("MyCompany", "Company", new { error = "CustomError", errorMsg = "You do not have any services." });

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FeaturedServices.Common.Models
+namespace FeaturedServices.Common.Models.Service
 {
     public class ListOfServicesVM : IValidatableObject
     {
@@ -20,6 +20,8 @@ namespace FeaturedServices.Common.Models
         [DataType(DataType.Time)]
         [Display(Name = "Duration Of Service")]
         public DateTime Duration { get; set; }
+
+        public int WorkerId { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

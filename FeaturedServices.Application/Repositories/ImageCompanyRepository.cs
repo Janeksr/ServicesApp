@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using FeaturedServices.Application.Contracts;
-using FeaturedServices.Common.Models;
+using FeaturedServices.Common.Models.Image;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;

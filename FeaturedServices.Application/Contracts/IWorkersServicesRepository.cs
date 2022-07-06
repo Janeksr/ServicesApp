@@ -1,4 +1,4 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Common.Models.WorkerServices;
 using FeaturedServices.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -11,7 +11,7 @@ namespace FeaturedServices.Application.Contracts
 {
     public interface IWorkersServicesRepository : IGenericRepository<Worker_Service>
     {
-        Task<List<SelectListItem>> PopulateSevices(int id);
+        Task<List<SelectListItem>> PopulateSevices(int id, int companyId);
         Task UpdateWorkerServiceAssignment(AssignWorkerWithServicesPostVM model);
     }
 }

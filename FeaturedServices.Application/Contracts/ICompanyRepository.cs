@@ -1,4 +1,5 @@
-﻿using FeaturedServices.Common.Models;
+﻿using FeaturedServices.Common.Models.Company;
+using FeaturedServices.Common.Models.Service;
 using FeaturedServices.Data;
 using System;
 using System.Collections.Generic;
@@ -16,8 +17,7 @@ namespace FeaturedServices.Application.Contracts
         Task<Company> CheckCompanyEdit();
         Task<int> GetCompanyId();
         Task<IQueryable<CompanyExposeVM>> GetAllCompanies();
-        Task<CompanyExposeVM> GetCompany();
-        Task<CompanyExposeVM> GetCompanyForUser(int id);
-        Task<List<ListOfServicesVM>> GetWorkersWithServicesUser(int id);
+        Task<CompanyClientVM> GetCompanyForUser(int id);
+        Task<List<ServicesWithWorkerVM>> GetWorkersWithServicesUser(int id);
     }
 }
