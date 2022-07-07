@@ -51,6 +51,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Company" asp-action="MyCompany">My Company</a>
                             </li>
                         }
+                        @if (User.IsInRole(Roles.User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="MyReservations">My Reservations</a>
+                            </li>
+                        }
 
                     </ul>
                     <partial name="_LoginPartial" />

@@ -1,5 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model List<UserReservations>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <div>
+                @User.Identity.Name
+            </div>
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                        <button class="accordion-button collapsed bg-warning" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                            Visits Taken
+                        </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                        <div class="accordion-body">
+                            @foreach (var visit in Model.Where(x => x.EndTime < DateTime.Now))
+                            {
+                                <div class="row">
+                                    <div class="col-2"></div>
+                                    <div class="col-8">
+                                        <div class="row border border-5 pt-2">
+                                            <div class="col-8">
+                                                <span class="text-bg-primary">Finished</span>
+                                                <h5 class="fs-5">@visit.ServiceName</h5>
+                                                <span class="fs-6 fw-lighter">Employee: @visit.WorkerName</span>
+                                                <p class="fs-5">@visit.CompanyName</p>
+                                            </div>
+                                            <div class="col-4">
+                                                <p>@visit.StartTime.ToString("MMMM")</p>
+                                                <p>@visit.StartTime.Day</p>
+                                                <p>@visit.StartTime.ToShortTimeString()</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2"></div>
+                                </div>
+
+                                <br />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>

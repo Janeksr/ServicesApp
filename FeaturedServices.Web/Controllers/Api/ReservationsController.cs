@@ -41,55 +41,6 @@ namespace FeaturedServices.Web.Controllers.Api
             return Ok(test);
         }
 
-        //// GET: api/Reservations/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Reservation>> GetReservation(int id)
-        //{
-        //    if (_context.Reservations == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var reservation = await _context.Reservations.FindAsync(id);
-
-        //    if (reservation == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return reservation;
-        //}
-
-        //// PUT: api/Reservations/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutReservation(int id, Reservation reservation)
-        //{
-        //    if (id != reservation.Id)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(reservation).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!ReservationExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
         // POST: api/Reservations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
@@ -105,8 +56,7 @@ namespace FeaturedServices.Web.Controllers.Api
                 if (ModelState.IsValid)
                 {
                     var reservationResult = await _reservationRepository.AddResrvation(reservationVM, user.Id);
-                    if (!reservationResult) return StatusCode(409);
-                    return Ok();
+                    return StatusCode(reservationResult);
                 }
             }
             catch (Exception ex)
@@ -118,29 +68,5 @@ namespace FeaturedServices.Web.Controllers.Api
             return BadRequest();
         }
 
-        //// DELETE: api/Reservations/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteReservation(int id)
-        //{
-        //    if (_context.Reservations == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var reservation = await _context.Reservations.FindAsync(id);
-        //    if (reservation == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Reservations.Remove(reservation);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
-        //private bool ReservationExists(int id)
-        //{
-        //    return (_context.Reservations?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
     }
 }

@@ -37,10 +37,10 @@ namespace FeaturedServices.Application.Repositories
             _userManager = userManager;
         }
 
-        public async Task<bool> AddResrvation(NewReservationVM newReservationVM, string userId)
+        public async Task<int> AddResrvation(NewReservationVM newReservationVM, string userId) //return int
         {
             var today = DateTime.Now.Date;
-            if(newReservationVM.StartTime.Date > today.AddMonths(2)) return false;
+            if(newReservationVM.StartTime.Date > today.AddMonths(2)) return 406; 
 
             var serviceDuration = await _context.Services.Where(x => x.Id == newReservationVM.ServiceId).Select(x => x.Duration).FirstOrDefaultAsync();
 
@@ -54,9 +54,9 @@ namespace FeaturedServices.Application.Repositories
             if (await CheckReservationDate(reservation) && result)
             {
                 await AddAsync(reservation);
-                return true;
+                return 200;
             }
-            return false;
+            return 409;
         }
 
         public async Task<IEnumerable<ReservationVM>> GetAll(int companyId, int workerId)
@@ -147,7 +147,8 @@ namespace FeaturedServices.Application.Repositories
                     ServiceName = x.Service.Name,
                     WorkerName = x.Worker.Firstname + " " + x.Worker.Lastname,
                     CompanyName = x.Worker.Company.Name,
-                    CompanyAddress = x.Worker.Company.StreetNameAndNumber
+                    CompanyAddress = x.Worker.Company.StreetNameAndNumber,
+                    Canceled = x.Canceled
                 })
                 .ToListAsync();
 

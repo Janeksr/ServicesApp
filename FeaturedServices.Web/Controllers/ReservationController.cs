@@ -19,7 +19,7 @@ namespace FeaturedServices.Web.Controllers
         public async Task<IActionResult> MyReservations()
         {
             var model = await _reservationRepository.GetUserReservations();
-            return View();
+            return View(model);
         }
     }
 }
