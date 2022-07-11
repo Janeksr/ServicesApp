@@ -9,8 +9,19 @@
 <nav aria-label="Suppliers navigation example">
     @await this.Component.InvokeAsync("Pager", new { pagingList = this.Model })
 </nav>
+@*<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <form class="w-100">
+            <input class="w-75" type="text" placeholder="Search..">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+    </div>
+    <div class="col-3"></div>
+</div>*@
 
-    @await Html.PartialAsync("_CompanyModel", Model)
+
+@await Html.PartialAsync("_CompanyModel", Model)
 
 
 

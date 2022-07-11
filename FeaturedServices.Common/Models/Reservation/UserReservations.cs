@@ -16,5 +16,6 @@ namespace FeaturedServices.Common.Models.Reservation
         public string CompanyName { get; set; }
         public string CompanyAddress { get; set; }
         public bool Canceled { get; set; }
+        public int Id { get; set; }
     }
 }

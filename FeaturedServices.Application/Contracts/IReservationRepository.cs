@@ -13,5 +13,6 @@ namespace FeaturedServices.Application.Contracts
         Task<IEnumerable<ReservationVM>> GetAll(int companyId, int workerId);
         Task<int> AddResrvation(NewReservationVM newReservationVM, string userId);
         Task<List<UserReservations>> GetUserReservations();
+        Task<bool> CancelReservation(int reservationId);
     }
 }

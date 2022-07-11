@@ -126,7 +126,7 @@ namespace FeaturedServices.Application.Repositories
 
         public async Task<List<UserReservations>> GetUserReservations()
         {
-            var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+            var user = await GetUser();
             var reservations = await GetReservationsByUser(user.Id);
             return reservations;
         }
@@ -148,11 +148,27 @@ namespace FeaturedServices.Application.Repositories
                     WorkerName = x.Worker.Firstname + " " + x.Worker.Lastname,
                     CompanyName = x.Worker.Company.Name,
                     CompanyAddress = x.Worker.Company.StreetNameAndNumber,
-                    Canceled = x.Canceled
+                    Canceled = x.Canceled,
+                    Id = x.Id
                 })
                 .ToListAsync();
 
             return reservationData;
+        }
+
+        public async Task<bool> CancelReservation(int reservationId)
+        {
+            var user = await GetUser();
+            var resevation = await _context.Reservations.Where(x => x.Id == reservationId && x.ClientId == user.Id).FirstOrDefaultAsync();
+            if (resevation == null) return false;
+            resevation.Canceled = true;
+            await UpdateAsync(resevation);
+            return true;
+        }
+        private async Task<Client> GetUser()
+        {
+            var user = await _userManager.GetUserAsync(_httpContextAccessor?.HttpContext?.User);
+            return user;
         }
     }
 }
