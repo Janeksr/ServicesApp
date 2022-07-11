@@ -17,17 +17,14 @@ namespace FeaturedServices.Web.Controllers.Api
     [ApiController]
     public class ReservationsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IReservationRepository _reservationRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly UserManager<Client> _userManager;
 
-        public ReservationsController(ApplicationDbContext context, 
-            IReservationRepository reservationRepository,
+        public ReservationsController(IReservationRepository reservationRepository,
             IHttpContextAccessor httpContextAccessor,
             UserManager<Client> userManager)
         {
-            _context = context;
             this._reservationRepository = reservationRepository;
             this._httpContextAccessor = httpContextAccessor;
             this._userManager = userManager;

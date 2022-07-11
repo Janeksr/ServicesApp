@@ -12,17 +12,17 @@ namespace FeaturedServices.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ICompanyRepository companyRepository;
+        private readonly ICompanyRepository _companyRepository;
 
         public HomeController(ILogger<HomeController> logger, ICompanyRepository companyRepository)
         {
             _logger = logger;
-            this.companyRepository = companyRepository;
+            _companyRepository = companyRepository;
         }
 
         public async Task<IActionResult> Index(int pageIndex = 1, string sort = "Name")
         {
-            var query = await companyRepository.GetAllCompanies();
+            var query = await _companyRepository.GetAllCompanies();
 
             var model = PagingList.Create(query, 2, pageIndex);
             return View(model);
