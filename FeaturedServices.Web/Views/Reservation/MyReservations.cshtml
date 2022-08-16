@@ -1,5 +1,160 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@model List<UserReservations>
+
+
+<div class="container">
+    <span class="text-danger">@Html.ValidationMessage("CustomError")</span>
+    
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <div>
+                @User.Identity.Name
+            </div>
+            <!--Pending visits-->
+            @foreach (var visit in Model.Where(x => x.StartTime > DateTime.Now && x.Canceled == false))
+            {
+                <div class="row">
+                    <div class="col-12">
+                        <div class="row border border-5 border-success rounded-3 py-2">
+                            <div class="col-8">
+                                <span class="badge bg-success">Pending</span>
+                                <h5 class="fs-3 mt-2 mb-0">@visit.ServiceName</h5>
+                                <span class="fw-light" style="font-size: 1rem;">Employee: @visit.WorkerName</span>
+                                <p class="fs-3">@visit.CompanyName</p>
+                            </div>
+                            <div class="col-2 d-flex border-start border-end border-2">
+                                <div class="d-flex flex-wrap align-content-center justify-content-center">
+                                    <span style="text-transform:capitalize;">@visit.StartTime.ToString("MMMM", new System.Globalization.CultureInfo("en-EN"))</span>
+                                    <span class="flex-grow-1 flex-shrink-0 text-center fs-3 fw-bold" style="flex-basis: 100%;">@visit.StartTime.Day</span>
+                                    <span>@visit.StartTime.ToShortTimeString()</span>
+                                </div>
+                            </div>
+                            <div class="col-2 my-auto ">
+                                <button data-id="@visit.Id" class="btn btn-danger deleteBtn ms-2" type="button"><i class="fa-solid fa-rectangle-xmark" style="font-size: 2rem;"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+            }
+
+            <form id="deleteForm" asp-action="CancelReservation">
+                <input type="hidden" id="reservationId" name="Id" />
+            </form>
+
+            <!--Visits taken-->
+
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-8">
+                    <!--Accordion items-->
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <!--Accordion Visits Taken-->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingOne">
+                                <button class="accordion-button collapsed bg-secondary rounded-3 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                    Visits Taken
+                                </button>
+                            </h2>
+                            <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    @foreach (var visit in Model.Where(x => x.EndTime < DateTime.Now && x.Canceled == false))
+                                    {
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row border border-5 rounded-3 py-2">
+                                                    <div class="col-8">
+                                                        <span class="badge bg-info text-black-50">Finished</span>
+                                                        <h5 class="fs-5 mt-2 mb-0">@visit.ServiceName</h5>
+                                                        <span class="fw-lighter" style="font-size: 0.85rem;">Employee: @visit.WorkerName</span>
+                                                        <p class="fs-5">@visit.CompanyName</p>
+                                                    </div>
+                                                    <div class="col-4 d-flex border-start border-2">
+                                                        <div class="d-flex flex-wrap align-content-center justify-content-center">
+                                                            <span style="text-transform:capitalize;">@visit.StartTime.ToString("MMMM", new System.Globalization.CultureInfo("en-EN"))</span>
+                                                            <span class="flex-grow-1 flex-shrink-0 text-center fs-5 fw-bold" style="flex-basis: 100%;">@visit.StartTime.Day</span>
+                                                            <span>@visit.StartTime.ToShortTimeString()</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <!--Accordio Visits Canceled-->
+                        <div class="accordion-item mt-5">
+                            <h2 class="accordion-header" id="flush-headingTwo">
+                                <button class="accordion-button collapsed bg-light rounded-3 text-dark border border-dark" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                    Visits Canceled
+                                </button>
+                            </h2>
+                            <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">
+                                    @foreach (var visit in Model.Where(x => x.Canceled == true))
+                                    {
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <div class="row border border-5 rounded-3 py-2">
+                                                    <div class="col-8">
+                                                        <span class="badge bg-danger">Canceled</span>
+                                                        <h5 class="fs-5 mt-2 mb-0">@visit.ServiceName</h5>
+                                                        <span class="fw-lighter" style="font-size: 0.85rem;">Employee: @visit.WorkerName</span>
+                                                        <p class="fs-5">@visit.CompanyName</p>
+                                                    </div>
+                                                    <div class="col-4 d-flex border-start border-2">
+                                                        <div class="d-flex flex-wrap align-content-center justify-content-center">
+                                                            <span style="text-transform:capitalize;">@visit.StartTime.ToString("MMMM", new System.Globalization.CultureInfo("en-EN"))</span>
+                                                            <span class="flex-grow-1 flex-shrink-0 text-center fs-5 fw-bold" style="flex-basis: 100%;">@visit.StartTime.Day</span>
+                                                            <span>@visit.StartTime.ToShortTimeString()</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-2"></div>
+            </div>
+
+
+
+
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+        $(function() {
+            $('.deleteBtn').click(function(e) {
+                swal({
+                    title: "Are you sure?",
+                    text: "Are you sure you want to cancel your reservation?",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true
+                }).then((confirm) => {
+                    if (confirm) {
+                        const btn = $(this);
+                        const id = btn.data("id");
+                        $('#reservationId').val(id);
+                        $('#deleteForm').submit();
+                    }
+                });
+            });
+        });
+    </script>
 }

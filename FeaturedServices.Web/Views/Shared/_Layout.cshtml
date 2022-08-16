@@ -10,11 +10,12 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FeaturedServices.Web.styles.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/sass/main.min.css"/>
+    <link rel="stylesheet" href="~/sass/main.min.css" />
     <script src="https://kit.fontawesome.com/2864fa4906.js" crossorigin="anonymous"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     <link href="~/lib/mobiscroll/css/mobiscroll.javascript.min.css" rel="stylesheet" />
     <script src="~/lib/mobiscroll/js/mobiscroll.javascript.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 </head>
 <body>
     <header>
@@ -51,6 +52,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Company" asp-action="MyCompany">My Company</a>
                             </li>
                         }
+                        @if (User.IsInRole(Roles.User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="MyReservations">My Reservations</a>
+                            </li>
+                        }
 
                     </ul>
                     <partial name="_LoginPartial" />
@@ -69,12 +76,16 @@
             &copy; 2022 - Featured Services - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/sweetalert/sweetalert.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>

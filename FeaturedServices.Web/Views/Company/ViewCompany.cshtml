@@ -94,10 +94,6 @@
     @await Html.PartialAsync("_CallendarModal", Model)
 </div>
 
-
-
-
-
 @section Scripts{
     <script>
         //DATE
@@ -266,6 +262,8 @@
                         runToast(errorText, errorBg, errorDuration);
                     } else if(response.status == 409){
                         runToast('This hour has already been taken.', errorBg, acceptedDuration);
+                    }else if(response.status == 406){
+                        runToast('Fit in range of 2 months.', errorBg, acceptedDuration);
                     } else if (response.status == 200) {
                         runToast(acceptedText, acceptedBg, acceptedDuration);
                     }

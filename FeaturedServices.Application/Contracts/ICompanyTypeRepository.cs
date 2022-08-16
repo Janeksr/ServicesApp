@@ -8,5 +8,6 @@ namespace FeaturedServices.Application.Contracts
     {
         Task<CompanyTypeVM> GetCompanyType(int id);
         Task<SelectList> GetSelectListCompaniesTypes();
+        Task<List<CompanyTypeVM>> GetAllCompanyTypes();
     }
 }
